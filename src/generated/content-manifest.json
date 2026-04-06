@@ -33,7 +33,37 @@
       "items",
       "demo",
       "links"
-    ]
+    ],
+    "taskTypes": [
+      "release",
+      "help-doc"
+    ],
+    "featureAreas": [
+      "access-control",
+      "visibility",
+      "hide-price",
+      "checkout",
+      "payment-methods",
+      "pricing",
+      "import-export",
+      "release"
+    ],
+    "audiences": [
+      "merchant",
+      "cs",
+      "pm"
+    ],
+    "stages": [
+      "launch",
+      "post-launch"
+    ],
+    "updatedAt": "2026-03-10T17:00:00.000Z",
+    "owner": "product-marketing",
+    "sourceOfTruth": "canonical",
+    "reviewStatus": "canonical",
+    "confidence": "high",
+    "freshnessStatus": "fresh",
+    "metadataText": "release help-doc access-control visibility hide-price checkout payment-methods pricing import-export release merchant cs pm launch post-launch product-marketing canonical canonical high fresh"
   },
   {
     "id": "changelog-changelog-bss-b2b-request-a-quote-quick",
@@ -71,7 +101,38 @@
       "were",
       "provided",
       "without"
-    ]
+    ],
+    "taskTypes": [
+      "release",
+      "help-doc"
+    ],
+    "featureAreas": [
+      "rfq",
+      "quote-form",
+      "quote-history",
+      "quick-order",
+      "csv",
+      "volume-pricing",
+      "quantity-increments",
+      "import-export",
+      "release"
+    ],
+    "audiences": [
+      "merchant",
+      "cs",
+      "pm"
+    ],
+    "stages": [
+      "launch",
+      "post-launch"
+    ],
+    "updatedAt": "2025-12-10T17:00:00.000Z",
+    "owner": "product-marketing",
+    "sourceOfTruth": "canonical",
+    "reviewStatus": "canonical",
+    "confidence": "high",
+    "freshnessStatus": "fresh",
+    "metadataText": "release help-doc rfq quote-form quote-history quick-order csv volume-pricing quantity-increments import-export release merchant cs pm launch post-launch product-marketing canonical canonical high fresh"
   },
   {
     "id": "changelog-changelog-bss-b2b-wholesale-solution",
@@ -106,7 +167,44 @@
       "material",
       "includes",
       "duplicate"
-    ]
+    ],
+    "taskTypes": [
+      "release",
+      "help-doc"
+    ],
+    "featureAreas": [
+      "shipping-methods",
+      "quick-order",
+      "csv",
+      "registration",
+      "segmentation",
+      "pricing",
+      "price-list",
+      "custom-pricing",
+      "volume-pricing",
+      "order-limit",
+      "quantity-increments",
+      "net-terms",
+      "manual-orders",
+      "import-export",
+      "release"
+    ],
+    "audiences": [
+      "merchant",
+      "cs",
+      "pm"
+    ],
+    "stages": [
+      "launch",
+      "post-launch"
+    ],
+    "updatedAt": "2026-03-15T17:00:00.000Z",
+    "owner": "product-marketing",
+    "sourceOfTruth": "canonical",
+    "reviewStatus": "canonical",
+    "confidence": "high",
+    "freshnessStatus": "fresh",
+    "metadataText": "release help-doc shipping-methods quick-order csv registration segmentation pricing price-list custom-pricing volume-pricing order-limit quantity-increments net-terms manual-orders import-export release merchant cs pm launch post-launch product-marketing canonical canonical high fresh"
   },
   {
     "id": "changelog-changelog-package-2026-03-18",
@@ -132,7 +230,31 @@
       "plus",
       "reusable",
       "template"
-    ]
+    ],
+    "taskTypes": [
+      "release",
+      "help-doc"
+    ],
+    "featureAreas": [
+      "merchant-education",
+      "release"
+    ],
+    "audiences": [
+      "merchant",
+      "cs",
+      "pm"
+    ],
+    "stages": [
+      "launch",
+      "post-launch"
+    ],
+    "updatedAt": "2026-03-17T17:00:00.000Z",
+    "owner": "product-marketing",
+    "sourceOfTruth": "supporting",
+    "reviewStatus": "reviewed",
+    "confidence": "medium",
+    "freshnessStatus": "fresh",
+    "metadataText": "release help-doc merchant-education release merchant cs pm launch post-launch product-marketing supporting reviewed medium fresh"
   },
   {
     "id": "changelog-changelog-template",
@@ -154,7 +276,30 @@
       "when",
       "audience",
       "merchants"
-    ]
+    ],
+    "taskTypes": [
+      "release",
+      "help-doc"
+    ],
+    "featureAreas": [
+      "release"
+    ],
+    "audiences": [
+      "merchant",
+      "cs",
+      "pm"
+    ],
+    "stages": [
+      "launch",
+      "post-launch"
+    ],
+    "updatedAt": null,
+    "owner": "product-marketing",
+    "sourceOfTruth": "supporting",
+    "reviewStatus": "reviewed",
+    "confidence": "medium",
+    "freshnessStatus": "undated",
+    "metadataText": "release help-doc release merchant cs pm launch post-launch product-marketing supporting reviewed medium undated"
   },
   {
     "id": "company",
@@ -174,7 +319,45 @@
       "work",
       "ecommerce",
       "domain"
-    ]
+    ],
+    "taskTypes": [
+      "planning",
+      "discovery"
+    ],
+    "featureAreas": [
+      "visibility",
+      "hide-price",
+      "rfq",
+      "quick-order",
+      "ordering",
+      "registration",
+      "segmentation",
+      "pricing",
+      "price-list",
+      "custom-pricing",
+      "volume-pricing",
+      "net-terms",
+      "manual-orders",
+      "persona",
+      "messaging",
+      "strategy",
+      "import-export"
+    ],
+    "audiences": [
+      "ba",
+      "pm"
+    ],
+    "stages": [
+      "discovery",
+      "definition"
+    ],
+    "updatedAt": null,
+    "owner": "product",
+    "sourceOfTruth": "canonical",
+    "reviewStatus": "canonical",
+    "confidence": "high",
+    "freshnessStatus": "stable",
+    "metadataText": "planning discovery visibility hide-price rfq quick-order ordering registration segmentation pricing price-list custom-pricing volume-pricing net-terms manual-orders persona messaging strategy import-export ba pm discovery definition product canonical canonical high stable"
   },
   {
     "id": "help-docs-references-pillar-page-template",
@@ -197,7 +380,30 @@
       "writing",
       "merchant-facing",
       "apps"
-    ]
+    ],
+    "taskTypes": [
+      "help-doc"
+    ],
+    "featureAreas": [
+      "merchant-education",
+      "release"
+    ],
+    "audiences": [
+      "merchant",
+      "cs",
+      "pm"
+    ],
+    "stages": [
+      "launch",
+      "post-launch"
+    ],
+    "updatedAt": null,
+    "owner": "customer-success",
+    "sourceOfTruth": "canonical",
+    "reviewStatus": "canonical",
+    "confidence": "high",
+    "freshnessStatus": "stable",
+    "metadataText": "help-doc merchant-education release merchant cs pm launch post-launch customer-success canonical canonical high stable"
   },
   {
     "id": "help-docs-skill",
@@ -238,7 +444,30 @@
       "writing",
       "practical",
       "non-"
-    ]
+    ],
+    "taskTypes": [
+      "help-doc"
+    ],
+    "featureAreas": [
+      "merchant-education",
+      "release"
+    ],
+    "audiences": [
+      "merchant",
+      "cs",
+      "pm"
+    ],
+    "stages": [
+      "launch",
+      "post-launch"
+    ],
+    "updatedAt": null,
+    "owner": "customer-success",
+    "sourceOfTruth": "supporting",
+    "reviewStatus": "reviewed",
+    "confidence": "medium",
+    "freshnessStatus": "undated",
+    "metadataText": "help-doc merchant-education release merchant cs pm launch post-launch customer-success supporting reviewed medium undated"
   },
   {
     "id": "lock-references-app-context",
@@ -274,7 +503,53 @@
       "hiding",
       "checkout",
       "guardrails"
-    ]
+    ],
+    "taskTypes": [
+      "prd",
+      "discovery",
+      "help-doc",
+      "planning"
+    ],
+    "featureAreas": [
+      "access-control",
+      "visibility",
+      "hide-price",
+      "theme-hiding",
+      "checkout",
+      "payment-methods",
+      "shipping-methods",
+      "rfq",
+      "quote-form",
+      "quote-history",
+      "quote-to-order",
+      "quick-order",
+      "ordering",
+      "registration",
+      "segmentation",
+      "pricing",
+      "price-list",
+      "custom-pricing",
+      "volume-pricing",
+      "net-terms",
+      "manual-orders",
+      "import-export",
+      "spec-writing"
+    ],
+    "audiences": [
+      "ba",
+      "pm"
+    ],
+    "stages": [
+      "definition",
+      "delivery"
+    ],
+    "updatedAt": null,
+    "owner": "product",
+    "sourceOfTruth": "canonical",
+    "reviewStatus": "canonical",
+    "confidence": "high",
+    "freshnessStatus": "stable",
+    "metadataText": "prd discovery help-doc planning access-control visibility hide-price theme-hiding checkout payment-methods shipping-methods rfq quote-form quote-history quote-to-order quick-order ordering registration segmentation pricing price-list custom-pricing volume-pricing net-terms manual-orders import-export spec-writing ba pm definition delivery product canonical canonical high stable"
   },
   {
     "id": "lock-references-competitive-context",
@@ -304,7 +579,40 @@
       "public-facing",
       "intelligence",
       "without"
-    ]
+    ],
+    "taskTypes": [
+      "competitive",
+      "planning"
+    ],
+    "featureAreas": [
+      "access-control",
+      "visibility",
+      "hide-price",
+      "theme-hiding",
+      "checkout",
+      "payment-methods",
+      "rfq",
+      "pricing",
+      "messaging",
+      "strategy",
+      "release"
+    ],
+    "audiences": [
+      "pm",
+      "sales",
+      "leadership"
+    ],
+    "stages": [
+      "discovery",
+      "definition"
+    ],
+    "updatedAt": null,
+    "owner": "product",
+    "sourceOfTruth": "supporting",
+    "reviewStatus": "reviewed",
+    "confidence": "medium",
+    "freshnessStatus": "undated",
+    "metadataText": "competitive planning access-control visibility hide-price theme-hiding checkout payment-methods rfq pricing messaging strategy release pm sales leadership discovery definition product supporting reviewed medium undated"
   },
   {
     "id": "lock-skill",
@@ -342,7 +650,38 @@
       "behavior",
       "rule",
       "safety"
-    ]
+    ],
+    "taskTypes": [
+      "prd",
+      "planning"
+    ],
+    "featureAreas": [
+      "visibility",
+      "hide-price",
+      "import-export",
+      "persona",
+      "messaging",
+      "strategy",
+      "spec-writing",
+      "insight-synthesis",
+      "merchant-education",
+      "release"
+    ],
+    "audiences": [
+      "ba",
+      "pm"
+    ],
+    "stages": [
+      "definition",
+      "delivery"
+    ],
+    "updatedAt": null,
+    "owner": "product",
+    "sourceOfTruth": "supporting",
+    "reviewStatus": "reviewed",
+    "confidence": "medium",
+    "freshnessStatus": "undated",
+    "metadataText": "prd planning visibility hide-price import-export persona messaging strategy spec-writing insight-synthesis merchant-education release ba pm definition delivery product supporting reviewed medium undated"
   },
   {
     "id": "product-analysis-references-devils-advocate-method",
@@ -368,7 +707,33 @@
       "choice",
       "before",
       "commitment"
-    ]
+    ],
+    "taskTypes": [
+      "planning",
+      "competitive",
+      "discovery"
+    ],
+    "featureAreas": [
+      "net-terms",
+      "messaging",
+      "strategy",
+      "insight-synthesis"
+    ],
+    "audiences": [
+      "ba",
+      "pm"
+    ],
+    "stages": [
+      "discovery",
+      "definition"
+    ],
+    "updatedAt": null,
+    "owner": "product",
+    "sourceOfTruth": "supporting",
+    "reviewStatus": "reviewed",
+    "confidence": "medium",
+    "freshnessStatus": "undated",
+    "metadataText": "planning competitive discovery net-terms messaging strategy insight-synthesis ba pm discovery definition product supporting reviewed medium undated"
   },
   {
     "id": "product-analysis-references-dhm-framework",
@@ -391,7 +756,32 @@
       "hard",
       "copy",
       "margin-enhancing"
-    ]
+    ],
+    "taskTypes": [
+      "planning",
+      "competitive",
+      "discovery"
+    ],
+    "featureAreas": [
+      "pricing",
+      "strategy",
+      "insight-synthesis"
+    ],
+    "audiences": [
+      "ba",
+      "pm"
+    ],
+    "stages": [
+      "discovery",
+      "definition"
+    ],
+    "updatedAt": null,
+    "owner": "product",
+    "sourceOfTruth": "supporting",
+    "reviewStatus": "reviewed",
+    "confidence": "medium",
+    "freshnessStatus": "undated",
+    "metadataText": "planning competitive discovery pricing strategy insight-synthesis ba pm discovery definition product supporting reviewed medium undated"
   },
   {
     "id": "product-analysis-references-swot-framework",
@@ -418,7 +808,31 @@
       "making",
       "strategic",
       "decisions"
-    ]
+    ],
+    "taskTypes": [
+      "planning",
+      "competitive",
+      "discovery"
+    ],
+    "featureAreas": [
+      "strategy",
+      "insight-synthesis"
+    ],
+    "audiences": [
+      "ba",
+      "pm"
+    ],
+    "stages": [
+      "discovery",
+      "definition"
+    ],
+    "updatedAt": null,
+    "owner": "product",
+    "sourceOfTruth": "supporting",
+    "reviewStatus": "reviewed",
+    "confidence": "medium",
+    "freshnessStatus": "undated",
+    "metadataText": "planning competitive discovery strategy insight-synthesis ba pm discovery definition product supporting reviewed medium undated"
   },
   {
     "id": "product-analysis-skill",
@@ -453,7 +867,34 @@
       "detailed",
       "implementation",
       "specs"
-    ]
+    ],
+    "taskTypes": [
+      "planning",
+      "competitive",
+      "discovery"
+    ],
+    "featureAreas": [
+      "net-terms",
+      "import-export",
+      "messaging",
+      "strategy",
+      "insight-synthesis"
+    ],
+    "audiences": [
+      "ba",
+      "pm"
+    ],
+    "stages": [
+      "discovery",
+      "definition"
+    ],
+    "updatedAt": null,
+    "owner": "product",
+    "sourceOfTruth": "supporting",
+    "reviewStatus": "reviewed",
+    "confidence": "medium",
+    "freshnessStatus": "undated",
+    "metadataText": "planning competitive discovery net-terms import-export messaging strategy insight-synthesis ba pm discovery definition product supporting reviewed medium undated"
   },
   {
     "id": "quote-references-app-context",
@@ -481,7 +922,48 @@
       "buyer",
       "ordering",
       "flows"
-    ]
+    ],
+    "taskTypes": [
+      "prd",
+      "discovery",
+      "help-doc",
+      "planning"
+    ],
+    "featureAreas": [
+      "access-control",
+      "hide-price",
+      "rfq",
+      "quote-form",
+      "quote-history",
+      "quote-to-order",
+      "quick-order",
+      "csv",
+      "ordering",
+      "registration",
+      "segmentation",
+      "pricing",
+      "price-list",
+      "custom-pricing",
+      "volume-pricing",
+      "net-terms",
+      "import-export",
+      "spec-writing"
+    ],
+    "audiences": [
+      "ba",
+      "pm"
+    ],
+    "stages": [
+      "definition",
+      "delivery"
+    ],
+    "updatedAt": null,
+    "owner": "product",
+    "sourceOfTruth": "canonical",
+    "reviewStatus": "canonical",
+    "confidence": "high",
+    "freshnessStatus": "stable",
+    "metadataText": "prd discovery help-doc planning access-control hide-price rfq quote-form quote-history quote-to-order quick-order csv ordering registration segmentation pricing price-list custom-pricing volume-pricing net-terms import-export spec-writing ba pm definition delivery product canonical canonical high stable"
   },
   {
     "id": "quote-references-competitive-context",
@@ -510,7 +992,41 @@
       "competitors",
       "shopify",
       "ecosystem"
-    ]
+    ],
+    "taskTypes": [
+      "competitive",
+      "planning"
+    ],
+    "featureAreas": [
+      "hide-price",
+      "rfq",
+      "quote-to-order",
+      "quick-order",
+      "csv",
+      "ordering",
+      "pricing",
+      "manual-orders",
+      "import-export",
+      "messaging",
+      "strategy",
+      "release"
+    ],
+    "audiences": [
+      "pm",
+      "sales",
+      "leadership"
+    ],
+    "stages": [
+      "discovery",
+      "definition"
+    ],
+    "updatedAt": null,
+    "owner": "product",
+    "sourceOfTruth": "supporting",
+    "reviewStatus": "reviewed",
+    "confidence": "medium",
+    "freshnessStatus": "undated",
+    "metadataText": "competitive planning hide-price rfq quote-to-order quick-order csv ordering pricing manual-orders import-export messaging strategy release pm sales leadership discovery definition product supporting reviewed medium undated"
   },
   {
     "id": "quote-skill",
@@ -547,7 +1063,41 @@
       "operations",
       "quick",
       "order"
-    ]
+    ],
+    "taskTypes": [
+      "prd",
+      "planning"
+    ],
+    "featureAreas": [
+      "hide-price",
+      "rfq",
+      "quick-order",
+      "ordering",
+      "pricing",
+      "import-export",
+      "persona",
+      "messaging",
+      "strategy",
+      "spec-writing",
+      "insight-synthesis",
+      "merchant-education",
+      "release"
+    ],
+    "audiences": [
+      "ba",
+      "pm"
+    ],
+    "stages": [
+      "definition",
+      "delivery"
+    ],
+    "updatedAt": null,
+    "owner": "product",
+    "sourceOfTruth": "supporting",
+    "reviewStatus": "reviewed",
+    "confidence": "medium",
+    "freshnessStatus": "undated",
+    "metadataText": "prd planning hide-price rfq quick-order ordering pricing import-export persona messaging strategy spec-writing insight-synthesis merchant-education release ba pm definition delivery product supporting reviewed medium undated"
   },
   {
     "id": "references-customer-segments",
@@ -583,7 +1133,35 @@
       "load",
       "only",
       "segmen"
-    ]
+    ],
+    "taskTypes": [
+      "discovery",
+      "planning"
+    ],
+    "featureAreas": [
+      "quick-order",
+      "ordering",
+      "segmentation",
+      "pricing",
+      "persona",
+      "messaging",
+      "strategy"
+    ],
+    "audiences": [
+      "ba",
+      "pm"
+    ],
+    "stages": [
+      "discovery",
+      "definition"
+    ],
+    "updatedAt": null,
+    "owner": "product",
+    "sourceOfTruth": "canonical",
+    "reviewStatus": "canonical",
+    "confidence": "high",
+    "freshnessStatus": "stable",
+    "metadataText": "discovery planning quick-order ordering segmentation pricing persona messaging strategy ba pm discovery definition product canonical canonical high stable"
   },
   {
     "id": "references-discovery-discovery-synthesis-template",
@@ -617,7 +1195,29 @@
       "signals",
       "feedback",
       "reviews"
-    ]
+    ],
+    "taskTypes": [
+      "discovery"
+    ],
+    "featureAreas": [
+      "net-terms",
+      "persona",
+      "insight-synthesis"
+    ],
+    "audiences": [
+      "ba",
+      "pm"
+    ],
+    "stages": [
+      "discovery"
+    ],
+    "updatedAt": null,
+    "owner": "product",
+    "sourceOfTruth": "canonical",
+    "reviewStatus": "canonical",
+    "confidence": "high",
+    "freshnessStatus": "stable",
+    "metadataText": "discovery net-terms persona insight-synthesis ba pm discovery product canonical canonical high stable"
   },
   {
     "id": "references-prd-prd-delivery-guidelines",
@@ -652,7 +1252,33 @@
       "candidates",
       "backlog",
       "prioritization"
-    ]
+    ],
+    "taskTypes": [
+      "prd",
+      "planning"
+    ],
+    "featureAreas": [
+      "payment-methods",
+      "spec-writing",
+      "delivery",
+      "insight-synthesis"
+    ],
+    "audiences": [
+      "ba",
+      "pm",
+      "engineering"
+    ],
+    "stages": [
+      "definition",
+      "delivery"
+    ],
+    "updatedAt": null,
+    "owner": "product",
+    "sourceOfTruth": "canonical",
+    "reviewStatus": "canonical",
+    "confidence": "high",
+    "freshnessStatus": "stable",
+    "metadataText": "prd planning payment-methods spec-writing delivery insight-synthesis ba pm engineering definition delivery product canonical canonical high stable"
   },
   {
     "id": "references-prd-socratic-questioning-framework",
@@ -688,7 +1314,32 @@
       "clarity",
       "interrogate",
       "stakeholders"
-    ]
+    ],
+    "taskTypes": [
+      "prd",
+      "planning"
+    ],
+    "featureAreas": [
+      "insight-synthesis",
+      "spec-writing",
+      "delivery"
+    ],
+    "audiences": [
+      "ba",
+      "pm",
+      "engineering"
+    ],
+    "stages": [
+      "definition",
+      "delivery"
+    ],
+    "updatedAt": null,
+    "owner": "product",
+    "sourceOfTruth": "canonical",
+    "reviewStatus": "canonical",
+    "confidence": "high",
+    "freshnessStatus": "stable",
+    "metadataText": "prd planning insight-synthesis spec-writing delivery ba pm engineering definition delivery product canonical canonical high stable"
   },
   {
     "id": "solution-references-app-context",
@@ -722,7 +1373,51 @@
       "constraints",
       "terms",
       "integ"
-    ]
+    ],
+    "taskTypes": [
+      "prd",
+      "discovery",
+      "help-doc",
+      "planning"
+    ],
+    "featureAreas": [
+      "access-control",
+      "visibility",
+      "theme-hiding",
+      "checkout",
+      "shipping-methods",
+      "rfq",
+      "quote-history",
+      "quick-order",
+      "csv",
+      "registration",
+      "segmentation",
+      "pricing",
+      "price-list",
+      "custom-pricing",
+      "volume-pricing",
+      "order-limit",
+      "quantity-increments",
+      "net-terms",
+      "manual-orders",
+      "import-export",
+      "spec-writing"
+    ],
+    "audiences": [
+      "ba",
+      "pm"
+    ],
+    "stages": [
+      "definition",
+      "delivery"
+    ],
+    "updatedAt": null,
+    "owner": "product",
+    "sourceOfTruth": "canonical",
+    "reviewStatus": "canonical",
+    "confidence": "high",
+    "freshnessStatus": "stable",
+    "metadataText": "prd discovery help-doc planning access-control visibility theme-hiding checkout shipping-methods rfq quote-history quick-order csv registration segmentation pricing price-list custom-pricing volume-pricing order-limit quantity-increments net-terms manual-orders import-export spec-writing ba pm definition delivery product canonical canonical high stable"
   },
   {
     "id": "solution-references-competitive-context",
@@ -755,7 +1450,37 @@
       "governance",
       "order",
       "constraint"
-    ]
+    ],
+    "taskTypes": [
+      "competitive",
+      "planning"
+    ],
+    "featureAreas": [
+      "pricing",
+      "net-terms",
+      "manual-orders",
+      "import-export",
+      "messaging",
+      "strategy",
+      "registration",
+      "segmentation"
+    ],
+    "audiences": [
+      "pm",
+      "sales",
+      "leadership"
+    ],
+    "stages": [
+      "discovery",
+      "definition"
+    ],
+    "updatedAt": null,
+    "owner": "product",
+    "sourceOfTruth": "supporting",
+    "reviewStatus": "reviewed",
+    "confidence": "medium",
+    "freshnessStatus": "undated",
+    "metadataText": "competitive planning pricing net-terms manual-orders import-export messaging strategy registration segmentation pm sales leadership discovery definition product supporting reviewed medium undated"
   },
   {
     "id": "solution-skill",
@@ -794,6 +1519,36 @@
       "with",
       "clear",
       "decision"
-    ]
+    ],
+    "taskTypes": [
+      "prd",
+      "planning"
+    ],
+    "featureAreas": [
+      "pricing",
+      "import-export",
+      "persona",
+      "messaging",
+      "strategy",
+      "spec-writing",
+      "insight-synthesis",
+      "merchant-education",
+      "release"
+    ],
+    "audiences": [
+      "ba",
+      "pm"
+    ],
+    "stages": [
+      "definition",
+      "delivery"
+    ],
+    "updatedAt": null,
+    "owner": "product",
+    "sourceOfTruth": "supporting",
+    "reviewStatus": "reviewed",
+    "confidence": "medium",
+    "freshnessStatus": "undated",
+    "metadataText": "prd planning pricing import-export persona messaging strategy spec-writing insight-synthesis merchant-education release ba pm definition delivery product supporting reviewed medium undated"
   }
 ]

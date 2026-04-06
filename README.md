@@ -31,6 +31,9 @@ MCP_RESOURCE_AUDIENCE=
 SUPABASE_URL=
 SUPABASE_SERVICE_ROLE_KEY=
 
+V0_API_KEYS=
+V0_API_KEY=
+
 ADMIN_BOOTSTRAP_EMAILS=
 ```
 
@@ -116,3 +119,15 @@ For normal users, send them:
 4. Login to `/admin`
 5. Create PATs for users
 6. Test MCP with one real token
+
+## Optional v0 integration
+
+Set `V0_API_KEYS` if you want the MCP server to generate very basic reference UI previews through the `generate_reference_ui` tool. `V0_API_KEY` is still supported as a single-key fallback.
+
+- `V0_API_KEYS` can be comma-separated or newline-separated
+- The server rotates keys round-robin per request and will try the next key when one hits auth/quota/rate-limit style failures
+
+- The integration uses the official `v0-sdk`
+- Output is intentionally constrained to low-fidelity single-page UI references
+- Each tool call should include the full confirmed UX/UI task, not only a short feature label
+- The tool returns the v0 chat URL, demo URL, and generated file names

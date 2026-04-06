@@ -7,28 +7,51 @@ import {
   getChangelogDocuments,
   getDocumentByUri,
   getPublicResourceCatalog,
+  getRelatedDocuments,
+  getSearchRefinementSuggestion,
   listDocuments,
   searchDocuments,
   suggestContextBundle,
 } from "@/lib/content/server";
-import { APPS, DOCUMENT_KINDS } from "@/lib/content/types";
+import { generateReferenceUi } from "@/lib/v0/reference-ui";
+import {
+  APPS,
+  CONFIDENCE_LEVELS,
+  DOCUMENT_KINDS,
+  FRESHNESS_STATUSES,
+  REVIEW_STATUSES,
+  SOURCE_OF_TRUTH_VALUES,
+  type DocumentRecord,
+} from "@/lib/content/types";
 
 const appSchema = z.enum(APPS);
 const kindSchema = z.enum(DOCUMENT_KINDS);
+const sourceOfTruthSchema = z.enum(SOURCE_OF_TRUTH_VALUES);
+const reviewStatusSchema = z.enum(REVIEW_STATUSES);
+const confidenceSchema = z.enum(CONFIDENCE_LEVELS);
+const freshnessStatusSchema = z.enum(FRESHNESS_STATUSES);
 
-const documentShape = {
-  id: z.string(),
+const metadataShape = {
+  task_type: z.array(z.string()),
+  feature_area: z.array(z.string()),
+  audience: z.array(z.string()),
+  stage: z.array(z.string()),
+  updated_at: z.string().nullable(),
+  owner: z.string().nullable(),
+  source_of_truth: sourceOfTruthSchema,
+  review_status: reviewStatusSchema,
+  confidence: confidenceSchema,
+  freshness_status: freshnessStatusSchema,
+};
+
+const documentReferenceShape = {
   uri: z.string(),
   title: z.string(),
-  kind: kindSchema,
-  app: appSchema.nullable(),
-  path: z.string(),
-  summary: z.string(),
-  content: z.string(),
-  tags: z.array(z.string()),
+  reason: z.string(),
 };
 
 const resourceShape = {
+  ...metadataShape,
   uri: z.string(),
   title: z.string(),
   kind: kindSchema,
@@ -42,8 +65,66 @@ const resourceWithPathShape = {
   path: z.string(),
 };
 
+const documentShape = {
+  ...resourceWithPathShape,
+  id: z.string(),
+  content: z.string(),
+  metadata: z.object(metadataShape),
+  related_documents: z.array(z.object(documentReferenceShape)),
+};
+
+const searchResultShape = {
+  ...resourceWithPathShape,
+  score: z.number(),
+  reason: z.string(),
+};
+
+const referenceUiShape = {
+  status: z.enum(["ready", "unconfigured", "error"]),
+  prompt: z.string(),
+  chat_id: z.string().nullable(),
+  chat_url: z.string().nullable(),
+  demo_url: z.string().nullable(),
+  version_id: z.string().nullable(),
+  file_count: z.number(),
+  files: z.array(
+    z.object({
+      name: z.string(),
+    }),
+  ),
+  notes: z.array(z.string()),
+  error: z.string().nullable(),
+};
+
 function createToolText(title: string, payload: unknown) {
   return `${title}\n\n${JSON.stringify(payload, null, 2)}`;
+}
+
+function serializeMetadata(document: DocumentRecord) {
+  return {
+    task_type: document.taskTypes,
+    feature_area: document.featureAreas,
+    audience: document.audiences,
+    stage: document.stages,
+    updated_at: document.updatedAt,
+    owner: document.owner,
+    source_of_truth: document.sourceOfTruth,
+    review_status: document.reviewStatus,
+    confidence: document.confidence,
+    freshness_status: document.freshnessStatus,
+  };
+}
+
+function serializeResource(document: DocumentRecord) {
+  return {
+    uri: document.uri,
+    title: document.title,
+    kind: document.kind,
+    app: document.app,
+    summary: document.summary,
+    tags: document.tags,
+    ...serializeMetadata(document),
+  };
 }
 
 export function createMcpServer() {
@@ -78,25 +159,56 @@ export function createMcpServer() {
   server.registerTool(
     "list_documents",
     {
-      description: "List indexed context documents by optional category and app.",
+      description: "List indexed context documents by structured filters such as app, kind, task type, or feature area.",
       inputSchema: {
+        query: z.string().min(2).optional(),
+        kind: kindSchema.optional(),
         category: kindSchema.optional(),
         app: appSchema.optional(),
+        task_type: z.string().min(2).optional(),
+        feature_area: z.string().min(2).optional(),
+        audience: z.string().min(2).optional(),
+        stage: z.string().min(2).optional(),
+        source_of_truth: sourceOfTruthSchema.optional(),
+        review_status: reviewStatusSchema.optional(),
+        confidence: confidenceSchema.optional(),
+        freshness_status: freshnessStatusSchema.optional(),
+        limit: z.number().int().min(1).max(50).optional(),
       },
       outputSchema: {
         total: z.number(),
         documents: z.array(z.object(resourceShape)),
       },
     },
-    async ({ category, app }) => {
-      const documents = listDocuments({ category, app }).map((document) => ({
-        uri: document.uri,
-        title: document.title,
-        kind: document.kind,
-        app: document.app,
-        summary: document.summary,
-        tags: document.tags,
-      }));
+    async ({
+      query,
+      kind,
+      category,
+      app,
+      task_type,
+      feature_area,
+      audience,
+      stage,
+      source_of_truth,
+      review_status,
+      confidence,
+      freshness_status,
+      limit,
+    }) => {
+      const documents = listDocuments({
+        query,
+        kind: kind ?? category,
+        app,
+        taskType: task_type,
+        featureArea: feature_area,
+        audience,
+        stage,
+        sourceOfTruth: source_of_truth,
+        reviewStatus: review_status,
+        confidence,
+        freshnessStatus: freshness_status,
+        limit,
+      }).map((document) => serializeResource(document));
 
       return {
         content: [
@@ -129,15 +241,26 @@ export function createMcpServer() {
     },
     async ({ uri }) => {
       const document = getDocumentByUri(uri);
+      const structuredDocument = document
+        ? {
+            ...serializeResource(document),
+            id: document.id,
+            path: document.path,
+            content: document.content,
+            metadata: serializeMetadata(document),
+            related_documents: getRelatedDocuments(uri),
+          }
+        : null;
+
       return {
         content: [
           {
             type: "text",
-            text: createToolText("Document lookup", { document }),
+            text: createToolText("Document lookup", { document: structuredDocument }),
           },
         ],
         structuredContent: {
-          document,
+          document: structuredDocument,
         },
       };
     },
@@ -146,28 +269,52 @@ export function createMcpServer() {
   server.registerTool(
     "search_context",
     {
-      description: "Search indexed context content across titles, summaries, tags, and body text.",
+      description: "Search context with lexical ranking plus metadata bias for app, task type, feature area, and freshness.",
       inputSchema: {
         query: z.string().min(2),
+        kind: kindSchema.optional(),
         category: kindSchema.optional(),
         app: appSchema.optional(),
+        task_type: z.string().min(2).optional(),
+        feature_area: z.string().min(2).optional(),
+        audience: z.string().min(2).optional(),
+        stage: z.string().min(2).optional(),
         limit: z.number().int().min(1).max(20).optional(),
       },
       outputSchema: {
         total: z.number(),
-        documents: z.array(z.object(resourceWithPathShape)),
+        refinement_suggestion: z.string().optional(),
+        documents: z.array(z.object(searchResultShape)),
       },
     },
-    async ({ query, category, app, limit }) => {
-      const documents = searchDocuments({ query, category, app, limit }).map((document) => ({
-        uri: document.uri,
-        title: document.title,
-        kind: document.kind,
-        app: document.app,
-        path: document.path,
-        summary: document.summary,
-        tags: document.tags,
+    async ({
+      query,
+      kind,
+      category,
+      app,
+      task_type,
+      feature_area,
+      audience,
+      stage,
+      limit,
+    }) => {
+      const searchInput = {
+        query,
+        kind: kind ?? category,
+        app,
+        taskType: task_type,
+        featureArea: feature_area,
+        audience,
+        stage,
+        limit,
+      };
+      const documents = searchDocuments(searchInput).map((result) => ({
+        ...serializeResource(result.document),
+        path: result.document.path,
+        score: result.score,
+        reason: result.reason,
       }));
+      const refinementSuggestion = getSearchRefinementSuggestion(searchInput);
 
       return {
         content: [
@@ -175,12 +322,14 @@ export function createMcpServer() {
             type: "text",
             text: createToolText(`Search results for "${query}"`, {
               total: documents.length,
+              refinement_suggestion: refinementSuggestion,
               documents,
             }),
           },
         ],
         structuredContent: {
           total: documents.length,
+          refinement_suggestion: refinementSuggestion,
           documents,
         },
       };
@@ -203,13 +352,8 @@ export function createMcpServer() {
     },
     async ({ app, query, limit }) => {
       const documents = getChangelogDocuments(app, query, limit).map((document) => ({
-        uri: document.uri,
-        title: document.title,
-        kind: document.kind,
-        app: document.app,
+        ...serializeResource(document),
         path: document.path,
-        summary: document.summary,
-        tags: document.tags,
       }));
 
       return {
@@ -237,31 +381,30 @@ export function createMcpServer() {
       inputSchema: {
         task_type: z.string().min(2),
         app: appSchema.optional(),
+        feature_area: z.string().min(2).optional(),
       },
       outputSchema: {
+        bundle_name: z.string(),
         taskType: z.string(),
         app: appSchema.nullable(),
+        feature_area: z.string().nullable(),
         rationale: z.string(),
-        resources: z.array(
-          z.object({
-            uri: z.string(),
-            title: z.string(),
-            reason: z.string(),
-          }),
-        ),
+        required: z.array(z.object(documentReferenceShape)),
+        optional: z.array(z.object(documentReferenceShape)),
+        resources: z.array(z.object(documentReferenceShape)),
       },
     },
-    async ({ task_type, app }) => {
-      const bundle = suggestContextBundle(task_type, app);
+    async ({ task_type, app, feature_area }) => {
+      const bundle = suggestContextBundle(task_type, app, feature_area);
       const structuredContent = {
+        bundle_name: bundle.bundleName,
         taskType: bundle.taskType,
         app: bundle.app,
+        feature_area: bundle.featureArea,
         rationale: bundle.rationale,
-        resources: bundle.resources.map((resource) => ({
-          uri: resource.uri,
-          title: resource.title,
-          reason: resource.reason,
-        })),
+        required: bundle.required,
+        optional: bundle.optional,
+        resources: bundle.resources,
       };
 
       return {
@@ -269,6 +412,92 @@ export function createMcpServer() {
           {
             type: "text",
             text: createToolText("Suggested context bundle", structuredContent),
+          },
+        ],
+        structuredContent,
+      };
+    },
+  );
+
+  server.registerTool(
+    "get_resource_catalog",
+    {
+      description: "Get a health-check summary of the indexed MCP resource inventory.",
+      inputSchema: {},
+      outputSchema: {
+        total: z.number(),
+        by_kind: z.record(z.string(), z.number()),
+        by_app: z.record(z.string(), z.number()),
+        by_freshness: z.record(z.string(), z.number()),
+        documents: z.array(z.object(resourceShape)),
+      },
+    },
+    async () => {
+      const catalog = getPublicResourceCatalog();
+      const structuredContent = {
+        total: catalog.total,
+        by_kind: catalog.byKind,
+        by_app: catalog.byApp,
+        by_freshness: catalog.byFreshness,
+        documents: catalog.documents.map((document) => serializeResource(document)),
+      };
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: createToolText("Resource catalog", structuredContent),
+          },
+        ],
+        structuredContent,
+      };
+    },
+  );
+
+  server.registerTool(
+    "generate_reference_ui",
+    {
+      description: "Generate a very basic reference UI with v0 from the full confirmed UX/UI task and return preview URLs plus file names.",
+      inputSchema: {
+        confirmed_task: z.string().min(20),
+        feature_name: z.string().min(3).optional(),
+        app: appSchema.optional(),
+        feature_area: z.string().min(2).optional(),
+        goal: z.string().min(2).optional(),
+        audience: z.string().min(2).optional(),
+        notes: z.string().min(2).optional(),
+      },
+      outputSchema: referenceUiShape,
+    },
+    async ({ confirmed_task, feature_name, app, feature_area, goal, audience, notes }) => {
+      const result = await generateReferenceUi({
+        confirmedTask: confirmed_task,
+        app,
+        featureName: feature_name,
+        featureArea: feature_area,
+        goal,
+        audience,
+        notes,
+      });
+
+      const structuredContent = {
+        status: result.status,
+        prompt: result.prompt,
+        chat_id: result.chatId,
+        chat_url: result.chatUrl,
+        demo_url: result.demoUrl,
+        version_id: result.versionId,
+        file_count: result.fileCount,
+        files: result.files,
+        notes: result.notes,
+        error: result.error,
+      };
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: createToolText("Reference UI", structuredContent),
           },
         ],
         structuredContent,

@@ -4,8 +4,8 @@ import { getPublicEnv } from "@/lib/env";
 const tools = [
   {
     name: "search_context",
-    useCase: "Search the knowledge base by keyword, app, or category.",
-    example: 'Find pricing approval context in Solution.',
+    useCase: "Search the knowledge base by keyword with metadata bias for app, task type, and feature area.",
+    example: 'Find pricing approval context in Solution for a PRD.',
   },
   {
     name: "get_document",
@@ -14,8 +14,8 @@ const tools = [
   },
   {
     name: "list_documents",
-    useCase: "Browse available resources before selecting one.",
-    example: "List all Quote app documents.",
+    useCase: "Browse available resources with structured filters before selecting one.",
+    example: "List all Quote app documents for help docs.",
   },
   {
     name: "get_changelog",
@@ -26,6 +26,16 @@ const tools = [
     name: "suggest_context_bundle",
     useCase: "Get the minimum set of documents needed for a task.",
     example: "Suggest the right bundle for a Solution PRD.",
+  },
+  {
+    name: "get_resource_catalog",
+    useCase: "Inspect the indexed inventory by kind, app, and freshness.",
+    example: "Show the MCP catalog health summary.",
+  },
+  {
+    name: "generate_reference_ui",
+    useCase: "Generate a very basic reference UI with v0 from the full confirmed UX/UI task and return a preview URL.",
+    example: "Generate a basic reference UI from the confirmed task for Solution pricing setup.",
   },
 ];
 
@@ -160,7 +170,7 @@ Authorization = "Bearer bss_pat_your_token_here"`}
           <div className="rounded-2xl border border-neutral-200 bg-white/80 p-4">
             <p className="font-semibold">Example 1: Find context for a PRD</p>
             <p className="mt-2 text-sm leading-7 text-neutral-700">
-              Ask your AI: <code>Search BA Agents for Solution pricing approval context and suggest the best PRD bundle.</code>
+              Ask your AI: <code>Search BA Agents for Solution pricing approval context, task type PRD, and suggest the best starter bundle.</code>
             </p>
             <p className="mt-2 text-sm leading-7 text-neutral-700">
               The MCP client will typically call <code>search_context</code> and <code>suggest_context_bundle</code>.
@@ -178,22 +188,48 @@ Authorization = "Bearer bss_pat_your_token_here"`}
           <div className="rounded-2xl border border-neutral-200 bg-white/80 p-4">
             <p className="font-semibold">Example 3: Check shipped naming</p>
             <p className="mt-2 text-sm leading-7 text-neutral-700">
-              Ask your AI: <code>Find recent Lock changelog notes before I write a help article.</code>
+              Ask your AI: <code>Find recent Lock changelog notes before I write a help article for hide price.</code>
             </p>
             <p className="mt-2 text-sm leading-7 text-neutral-700">
               The MCP client can use <code>get_changelog</code>.
             </p>
           </div>
           <div className="rounded-2xl border border-neutral-200 bg-white/80 p-4">
-            <p className="font-semibold">Example 4: Draft from a built-in prompt</p>
+            <p className="font-semibold">Example 4: Inspect the catalog</p>
             <p className="mt-2 text-sm leading-7 text-neutral-700">
-              Ask your AI: <code>Use the draft_prd prompt for a Lock feature around login gating.</code>
+              Ask your AI: <code>Show the BA Agents resource catalog by kind and freshness.</code>
             </p>
             <p className="mt-2 text-sm leading-7 text-neutral-700">
-              The server exposes ready-made prompts for PRD, discovery, help docs, and strategy analysis.
+              The MCP client can use <code>get_resource_catalog</code>.
+            </p>
+          </div>
+          <div className="rounded-2xl border border-neutral-200 bg-white/80 p-4">
+            <p className="font-semibold">Example 5: Generate a UI reference</p>
+            <p className="mt-2 text-sm leading-7 text-neutral-700">
+              Ask your AI: <code>Use generate_reference_ui with the full confirmed UX/UI task for Quote history in customer account.</code>
+            </p>
+            <p className="mt-2 text-sm leading-7 text-neutral-700">
+              The MCP client can use <code>generate_reference_ui</code> and return a v0 demo URL.
             </p>
           </div>
         </div>
+      </section>
+
+      <section className="panel mt-8 p-6">
+        <h2 className="text-2xl font-semibold">Built-in prompts</h2>
+        <p className="mt-3 text-sm leading-7 text-neutral-700">
+          The server also exposes ready-made prompts for PRD, discovery, help docs, and strategy analysis.
+        </p>
+        <ul className="mt-4 space-y-4 text-sm leading-7 text-neutral-700">
+          {prompts.map((prompt) => (
+            <li key={prompt.name}>
+              <p>
+                <code>{prompt.name}</code>
+              </p>
+              <p>{prompt.useCase}</p>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section className="mt-8 grid gap-4 md:grid-cols-2">
@@ -212,16 +248,20 @@ Authorization = "Bearer bss_pat_your_token_here"`}
           </ul>
         </div>
         <div className="panel p-6">
-          <h2 className="text-2xl font-semibold">Built-in prompts</h2>
+          <h2 className="text-2xl font-semibold">Retrieval tips</h2>
           <ul className="mt-4 space-y-4 text-sm leading-7 text-neutral-700">
-            {prompts.map((prompt) => (
-              <li key={prompt.name}>
-                <p>
-                  <code>{prompt.name}</code>
-                </p>
-                <p>{prompt.useCase}</p>
-              </li>
-            ))}
+            <li>
+              Add <code>app</code>, <code>task_type</code>, or <code>feature_area</code> when your first search is too broad.
+            </li>
+            <li>
+              Use <code>get_document</code> after <code>search_context</code> when you need the canonical source, metadata, and related documents.
+            </li>
+            <li>
+              Use <code>suggest_context_bundle</code> before drafting so your AI starts from the minimum trusted context instead of guessing.
+            </li>
+            <li>
+              Use <code>generate_reference_ui</code> only after the UX/UI task is confirmed, and pass the full confirmed task text into the tool call.
+            </li>
           </ul>
         </div>
       </section>
@@ -244,7 +284,7 @@ Authorization = "Bearer bss_pat_your_token_here"`}
         <h2 className="text-2xl font-semibold">Troubleshooting</h2>
         <ul className="mt-4 space-y-3 text-sm leading-7 text-neutral-700">
           <li>If you get <code>401</code>, your token is missing, invalid, disabled, or expired.</li>
-          <li>If your MCP client connects but finds nothing useful, ask for a more specific tool call such as <code>search_context</code> or <code>get_document</code>.</li>
+          <li>If your MCP client connects but finds nothing useful, add a more specific tool call such as <code>search_context</code> with <code>app</code>, <code>task_type</code>, or <code>feature_area</code>.</li>
           <li>If you do not have a token yet, contact your admin and ask for a personal access token for BA Agents MCP.</li>
         </ul>
       </section>

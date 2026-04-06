@@ -12,6 +12,18 @@ function readEnv(name: string): string | undefined {
   return trimmed.length > 0 ? trimmed : undefined;
 }
 
+function readEnvList(name: string): string[] {
+  const value = process.env[name];
+  if (!value) {
+    return [];
+  }
+
+  return value
+    .split(/[\n,]+/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
 export function getBaseUrl(): string {
   return readEnv("APP_BASE_URL") ?? readEnv("NEXTAUTH_URL") ?? DEFAULT_BASE_URL;
 }
@@ -58,6 +70,20 @@ export function getSupabaseUrl(): string | undefined {
 
 export function getSupabaseServiceRoleKey(): string | undefined {
   return readEnv("SUPABASE_SERVICE_ROLE_KEY");
+}
+
+export function getV0ApiKey(): string | undefined {
+  return getV0ApiKeys()[0];
+}
+
+export function getV0ApiKeys(): string[] {
+  const keys = readEnvList("V0_API_KEYS");
+  if (keys.length > 0) {
+    return Array.from(new Set(keys));
+  }
+
+  const singleKey = readEnv("V0_API_KEY");
+  return singleKey ? [singleKey] : [];
 }
 
 export function getBootstrapEmails(): string[] {

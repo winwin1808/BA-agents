@@ -245,7 +245,13 @@ export function isKnownApp(value: string | null | undefined): value is AppName {
   return Boolean(value && APPS.includes(value as AppName));
 }
 
-export const searchFields = ["title", "summary", "content", "tags"] as const;
+export const searchFields = [
+  "title",
+  "summary",
+  "content",
+  "tags",
+  "metadataText",
+] as const;
 
 export const searchOptions = {
   fields: [...searchFields] as string[],
@@ -259,12 +265,24 @@ export const searchOptions = {
     "summary",
     "content",
     "tags",
+    "taskTypes",
+    "featureAreas",
+    "audiences",
+    "stages",
+    "updatedAt",
+    "owner",
+    "sourceOfTruth",
+    "reviewStatus",
+    "confidence",
+    "freshnessStatus",
+    "metadataText",
   ] as string[],
   searchOptions: {
     boost: {
       title: 4,
       summary: 2,
       tags: 3,
+      metadataText: 2,
       content: 1,
     },
     fuzzy: 0.2,

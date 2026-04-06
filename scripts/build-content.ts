@@ -16,6 +16,7 @@ import {
   normalizePath,
   searchOptions,
 } from "../src/lib/content/config";
+import { buildDocumentMetadata } from "../src/lib/content/metadata";
 import type { DocumentRecord } from "../src/lib/content/types";
 
 const ROOT = process.cwd();
@@ -55,17 +56,38 @@ function buildRecord(relativePath: string, markdown: string): DocumentRecord {
     : getAppFromPath(relativePath);
 
   const summary = inferSummary(content);
+  const kind = getDocumentKind(relativePath);
+  const metadata = buildDocumentMetadata({
+    relativePath,
+    title,
+    summary,
+    content,
+    kind,
+    app,
+    frontmatter: parsed.data,
+  });
 
   return {
     id: buildDocumentId(relativePath),
     uri: getDocumentUri(relativePath),
     title,
-    kind: getDocumentKind(relativePath),
+    kind,
     app,
     path: relativePath,
     summary,
     content,
     tags: inferTags(relativePath, title, summary),
+    taskTypes: metadata.taskTypes,
+    featureAreas: metadata.featureAreas,
+    audiences: metadata.audiences,
+    stages: metadata.stages,
+    updatedAt: metadata.updatedAt,
+    owner: metadata.owner,
+    sourceOfTruth: metadata.sourceOfTruth,
+    reviewStatus: metadata.reviewStatus,
+    confidence: metadata.confidence,
+    freshnessStatus: metadata.freshnessStatus,
+    metadataText: metadata.metadataText,
   };
 }
 
