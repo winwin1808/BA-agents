@@ -2,11 +2,12 @@ import { sql as vercelSql } from "@vercel/postgres";
 import { drizzle } from "drizzle-orm/vercel-postgres";
 
 import { getPostgresUrl } from "@/lib/env";
+import { isSupabaseConfigured } from "@/lib/supabase/admin-store";
 
 let dbInstance: ReturnType<typeof drizzle> | null = null;
 
 export function isDatabaseConfigured(): boolean {
-  return Boolean(getPostgresUrl());
+  return isSupabaseConfigured() || Boolean(getPostgresUrl());
 }
 
 export function getDb() {

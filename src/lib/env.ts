@@ -52,6 +52,14 @@ export function getPostgresUrl(): string | undefined {
   return readEnv("POSTGRES_URL");
 }
 
+export function getSupabaseUrl(): string | undefined {
+  return readEnv("SUPABASE_URL");
+}
+
+export function getSupabaseServiceRoleKey(): string | undefined {
+  return readEnv("SUPABASE_SERVICE_ROLE_KEY");
+}
+
 export function getBootstrapEmails(): string[] {
   return (readEnv("ADMIN_BOOTSTRAP_EMAILS") ?? "")
     .split(",")

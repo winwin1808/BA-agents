@@ -97,7 +97,8 @@ export function AdminDashboard(props: {
     <div className="space-y-6">
       {!props.dbConfigured ? (
         <div className="rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
-          Database is not configured. Set <code>POSTGRES_URL</code> before using admin APIs.
+          Admin data store is not configured. Set <code>SUPABASE_URL</code> and{" "}
+          <code>SUPABASE_SERVICE_ROLE_KEY</code>, or fall back to <code>POSTGRES_URL</code>.
         </div>
       ) : null}
       {message ? (

@@ -14,7 +14,13 @@ export async function GET(request: NextRequest) {
   }
 
   if (!isDatabaseConfigured()) {
-    return NextResponse.json({ error: "POSTGRES_URL is not configured." }, { status: 500 });
+    return NextResponse.json(
+      {
+        error:
+          "Admin data store is not configured. Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY, or POSTGRES_URL.",
+      },
+      { status: 500 },
+    );
   }
 
   const logs = await listAuditLogs({

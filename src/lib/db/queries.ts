@@ -2,10 +2,28 @@ import { and, desc, eq, ilike, or } from "drizzle-orm";
 
 import { getDb, isDatabaseConfigured } from "@/lib/db";
 import { adminUsers, authAuditLogs, mcpClients } from "@/lib/db/schema";
+import {
+  createAdminUserInSupabase,
+  createAuditLogInSupabase,
+  createMcpClientInSupabase,
+  getAdminUserByEmailFromSupabase,
+  getMcpClientByClientIdFromSupabase,
+  isSupabaseConfigured,
+  listAdminUsersFromSupabase,
+  listAuditLogsFromSupabase,
+  listMcpClientsFromSupabase,
+  touchAdminLastLoginInSupabase,
+  updateAdminUserInSupabase,
+  updateMcpClientInSupabase,
+} from "@/lib/supabase/admin-store";
 
 export async function getAdminUserByEmail(email: string) {
   if (!isDatabaseConfigured()) {
     return null;
+  }
+
+  if (isSupabaseConfigured()) {
+    return getAdminUserByEmailFromSupabase(email);
   }
 
   const [user] = await getDb()
@@ -22,6 +40,10 @@ export async function listAdminUsers() {
     return [];
   }
 
+  if (isSupabaseConfigured()) {
+    return listAdminUsersFromSupabase();
+  }
+
   return getDb().select().from(adminUsers).orderBy(adminUsers.email);
 }
 
@@ -31,6 +53,10 @@ export async function createAdminUser(input: {
   role: "owner" | "admin";
   status?: "active" | "disabled";
 }) {
+  if (isSupabaseConfigured()) {
+    return createAdminUserInSupabase(input);
+  }
+
   const [row] = await getDb()
     .insert(adminUsers)
     .values({
@@ -50,6 +76,10 @@ export async function updateAdminUser(input: {
   role?: "owner" | "admin";
   status?: "active" | "disabled";
 }) {
+  if (isSupabaseConfigured()) {
+    return updateAdminUserInSupabase(input);
+  }
+
   const payload: Partial<typeof adminUsers.$inferInsert> = {
     updatedAt: new Date(),
   };
@@ -78,6 +108,10 @@ export async function updateAdminUser(input: {
 export async function touchAdminLastLogin(email: string) {
   if (!isDatabaseConfigured()) {
     return null;
+  }
+
+  if (isSupabaseConfigured()) {
+    return touchAdminLastLoginInSupabase(email);
   }
 
   const [row] = await getDb()
@@ -119,12 +153,20 @@ export async function listMcpClients() {
     return [];
   }
 
+  if (isSupabaseConfigured()) {
+    return listMcpClientsFromSupabase();
+  }
+
   return getDb().select().from(mcpClients).orderBy(mcpClients.displayName);
 }
 
 export async function getMcpClientByClientId(oidcClientId: string) {
   if (!isDatabaseConfigured()) {
     return null;
+  }
+
+  if (isSupabaseConfigured()) {
+    return getMcpClientByClientIdFromSupabase(oidcClientId);
   }
 
   const [client] = await getDb()
@@ -143,6 +185,10 @@ export async function createMcpClient(input: {
   notes?: string | null;
   status?: "active" | "disabled";
 }) {
+  if (isSupabaseConfigured()) {
+    return createMcpClientInSupabase(input);
+  }
+
   const [row] = await getDb()
     .insert(mcpClients)
     .values({
@@ -164,6 +210,10 @@ export async function updateMcpClient(input: {
   notes?: string | null;
   status?: "active" | "disabled";
 }) {
+  if (isSupabaseConfigured()) {
+    return updateMcpClientInSupabase(input);
+  }
+
   const payload: Partial<typeof mcpClients.$inferInsert> = {
     updatedAt: new Date(),
   };
@@ -202,6 +252,10 @@ export async function listAuditLogs(filters?: {
     return [];
   }
 
+  if (isSupabaseConfigured()) {
+    return listAuditLogsFromSupabase(filters);
+  }
+
   const predicates = [];
   if (filters?.eventType) {
     predicates.push(eq(authAuditLogs.eventType, filters.eventType));
@@ -232,6 +286,10 @@ export async function createAuditLog(input: {
 }) {
   if (!isDatabaseConfigured()) {
     return null;
+  }
+
+  if (isSupabaseConfigured()) {
+    return createAuditLogInSupabase(input);
   }
 
   const [row] = await getDb()
