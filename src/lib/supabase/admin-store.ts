@@ -39,6 +39,22 @@ export interface AuthAuditLogRecord {
   createdAt: Date;
 }
 
+export interface PersonalAccessTokenRecord {
+  id: string;
+  label: string;
+  ownerEmail: string;
+  tokenValue: string | null;
+  tokenPrefix: string;
+  tokenHash: string;
+  allowedScope: string;
+  status: RecordStatus;
+  notes: string | null;
+  lastUsedAt: Date | null;
+  expiresAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 type AdminUserRow = {
   id: string;
   email: string;
@@ -73,6 +89,22 @@ type AuthAuditLogRow = {
   ip_hash: string | null;
   user_agent: string | null;
   created_at: string;
+};
+
+type PersonalAccessTokenRow = {
+  id: string;
+  label: string;
+  owner_email: string;
+  token_value: string | null;
+  token_prefix: string;
+  token_hash: string;
+  allowed_scope: string;
+  status: RecordStatus;
+  notes: string | null;
+  last_used_at: string | null;
+  expires_at: string | null;
+  created_at: string;
+  updated_at: string;
 };
 
 function mapAdminUser(row: AdminUserRow): AdminUserRecord {
@@ -114,6 +146,24 @@ function mapAuditLog(row: AuthAuditLogRow): AuthAuditLogRecord {
     ipHash: row.ip_hash,
     userAgent: row.user_agent,
     createdAt: new Date(row.created_at),
+  };
+}
+
+function mapPersonalAccessToken(row: PersonalAccessTokenRow): PersonalAccessTokenRecord {
+  return {
+    id: row.id,
+    label: row.label,
+    ownerEmail: row.owner_email,
+    tokenValue: row.token_value,
+    tokenPrefix: row.token_prefix,
+    tokenHash: row.token_hash,
+    allowedScope: row.allowed_scope,
+    status: row.status,
+    notes: row.notes,
+    lastUsedAt: row.last_used_at ? new Date(row.last_used_at) : null,
+    expiresAt: row.expires_at ? new Date(row.expires_at) : null,
+    createdAt: new Date(row.created_at),
+    updatedAt: new Date(row.updated_at),
   };
 }
 
@@ -448,4 +498,153 @@ export async function createAuditLogInSupabase(input: {
   });
 
   return rows[0] ? mapAuditLog(rows[0]) : null;
+}
+
+export async function listPersonalAccessTokensFromSupabase(): Promise<PersonalAccessTokenRecord[]> {
+  const rows = await supabaseRequest<PersonalAccessTokenRow[]>(
+    "/personal_access_tokens?select=*&order=created_at.desc",
+  );
+
+  return rows.map(mapPersonalAccessToken);
+}
+
+export async function getPersonalAccessTokenByHashFromSupabase(
+  tokenHash: string,
+): Promise<PersonalAccessTokenRecord | null> {
+  const params = new URLSearchParams({
+    select: "*",
+    token_hash: `eq.${tokenHash}`,
+    limit: "1",
+  });
+
+  const rows = await supabaseRequest<PersonalAccessTokenRow[]>(
+    `/personal_access_tokens?${params.toString()}`,
+  );
+
+  return rows[0] ? mapPersonalAccessToken(rows[0]) : null;
+}
+
+export async function createPersonalAccessTokenInSupabase(input: {
+  label: string;
+  ownerEmail: string;
+  tokenValue: string;
+  tokenPrefix: string;
+  tokenHash: string;
+  allowedScope?: string;
+  notes?: string | null;
+  expiresAt?: string | null;
+}): Promise<PersonalAccessTokenRecord> {
+  const rows = await supabaseRequest<PersonalAccessTokenRow[]>(
+    "/personal_access_tokens",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify([
+        {
+          label: input.label,
+          owner_email: input.ownerEmail.toLowerCase(),
+          token_value: input.tokenValue,
+          token_prefix: input.tokenPrefix,
+          token_hash: input.tokenHash,
+          allowed_scope: input.allowedScope ?? "mcp:read",
+          notes: input.notes ?? null,
+          expires_at: input.expiresAt ?? null,
+        },
+      ]),
+    },
+  );
+
+  return mapPersonalAccessToken(rows[0]);
+}
+
+export async function updatePersonalAccessTokenInSupabase(input: {
+  id: string;
+  label?: string;
+  ownerEmail?: string;
+  allowedScope?: string;
+  notes?: string | null;
+  status?: RecordStatus;
+  expiresAt?: string | null;
+}): Promise<PersonalAccessTokenRecord | null> {
+  const payload: Record<string, unknown> = {
+    updated_at: new Date().toISOString(),
+  };
+
+  if (input.label) {
+    payload.label = input.label;
+  }
+
+  if (input.ownerEmail) {
+    payload.owner_email = input.ownerEmail.toLowerCase();
+  }
+
+  if (input.allowedScope) {
+    payload.allowed_scope = input.allowedScope;
+  }
+
+  if (input.notes !== undefined) {
+    payload.notes = input.notes;
+  }
+
+  if (input.status) {
+    payload.status = input.status;
+  }
+
+  if (input.expiresAt !== undefined) {
+    payload.expires_at = input.expiresAt;
+  }
+
+  const rows = await supabaseRequest<PersonalAccessTokenRow[]>(
+    `/personal_access_tokens?id=eq.${input.id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify(payload),
+    },
+  );
+
+  return rows[0] ? mapPersonalAccessToken(rows[0]) : null;
+}
+
+export async function deletePersonalAccessTokenInSupabase(
+  id: string,
+): Promise<PersonalAccessTokenRecord | null> {
+  const rows = await supabaseRequest<PersonalAccessTokenRow[]>(
+    `/personal_access_tokens?id=eq.${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        Prefer: "return=representation",
+      },
+    },
+  );
+
+  return rows[0] ? mapPersonalAccessToken(rows[0]) : null;
+}
+
+export async function touchPersonalAccessTokenInSupabase(
+  id: string,
+): Promise<PersonalAccessTokenRecord | null> {
+  const rows = await supabaseRequest<PersonalAccessTokenRow[]>(
+    `/personal_access_tokens?id=eq.${id}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify({
+        last_used_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }),
+    },
+  );
+
+  return rows[0] ? mapPersonalAccessToken(rows[0]) : null;
 }

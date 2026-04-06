@@ -1,15 +1,21 @@
-import { AdminDashboard } from "@/components/admin/admin-dashboard";
+import { AdminDashboardShell } from "@/components/admin/admin-dashboard-shell";
 import { requireAdminPageSession } from "@/lib/auth/admin";
 import { isDatabaseConfigured } from "@/lib/db";
-import { listAdminUsers, listAuditLogs, listMcpClients } from "@/lib/db/queries";
+import {
+  listAdminUsers,
+  listAuditLogs,
+  listMcpClients,
+  listPersonalAccessTokens,
+} from "@/lib/db/queries";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
   const { adminUser } = await requireAdminPageSession("/admin");
-  const [adminUsers, mcpClients, auditLogs] = await Promise.all([
+  const [adminUsers, mcpClients, personalAccessTokens, auditLogs] = await Promise.all([
     listAdminUsers(),
     listMcpClients(),
+    listPersonalAccessTokens(),
     listAuditLogs({ limit: 100 }),
   ]);
 
@@ -26,7 +32,7 @@ export default async function AdminPage() {
         </p>
       </section>
 
-      <AdminDashboard
+      <AdminDashboardShell
         currentRole={adminUser.role}
         dbConfigured={isDatabaseConfigured()}
         adminUsers={adminUsers.map((user) => ({
@@ -44,6 +50,18 @@ export default async function AdminPage() {
           status: client.status,
           allowedScope: client.allowedScope,
           notes: client.notes,
+        }))}
+        personalAccessTokens={personalAccessTokens.map((token) => ({
+          id: token.id,
+          label: token.label,
+          ownerEmail: token.ownerEmail,
+          tokenValue: token.tokenValue,
+          tokenPrefix: token.tokenPrefix,
+          status: token.status,
+          allowedScope: token.allowedScope,
+          notes: token.notes,
+          lastUsedAt: token.lastUsedAt?.toISOString() ?? null,
+          expiresAt: token.expiresAt?.toISOString() ?? null,
         }))}
         auditLogs={auditLogs.map((log) => ({
           id: log.id,

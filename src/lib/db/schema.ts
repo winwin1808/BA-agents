@@ -46,6 +46,23 @@ export const authAuditLogs = pgTable("auth_audit_logs", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+export const personalAccessTokens = pgTable("personal_access_tokens", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  label: varchar("label", { length: 255 }).notNull(),
+  ownerEmail: varchar("owner_email", { length: 320 }).notNull(),
+  tokenValue: text("token_value"),
+  tokenPrefix: varchar("token_prefix", { length: 24 }).notNull(),
+  tokenHash: varchar("token_hash", { length: 128 }).notNull().unique(),
+  allowedScope: varchar("allowed_scope", { length: 255 }).notNull().default("mcp:read"),
+  status: recordStatusEnum("status").notNull().default("active"),
+  notes: text("notes"),
+  lastUsedAt: timestamp("last_used_at", { withTimezone: true }),
+  expiresAt: timestamp("expires_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export type AdminUser = typeof adminUsers.$inferSelect;
 export type McpClient = typeof mcpClients.$inferSelect;
 export type AuthAuditLog = typeof authAuditLogs.$inferSelect;
+export type PersonalAccessToken = typeof personalAccessTokens.$inferSelect;

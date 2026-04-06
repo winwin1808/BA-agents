@@ -3,8 +3,16 @@ import type { AuthInfo } from "@modelcontextprotocol/sdk/server/auth/types.js";
 
 import { getRequestContext, logAuthEvent } from "@/lib/auth/audit";
 import { getExternalOidcMetadata, normalizeIssuer } from "@/lib/auth/oidc";
+import {
+  hashPersonalAccessToken,
+  isPersonalAccessToken,
+} from "@/lib/auth/personal-access-token";
 import { getMcpResourceAudience, getMcpScope, getPublicEnv } from "@/lib/env";
-import { getMcpClientByClientId } from "@/lib/db/queries";
+import {
+  getMcpClientByClientId,
+  getPersonalAccessTokenByHash,
+  touchPersonalAccessToken,
+} from "@/lib/db/queries";
 
 let jwksCache: ReturnType<typeof createRemoteJWKSet> | null = null;
 
@@ -79,6 +87,87 @@ export async function verifyMcpAuth(request: Request): Promise<
       ...requestContext,
     });
     return { ok: false, response: unauthorized("invalid_token", "Missing bearer token.") };
+  }
+
+  if (isPersonalAccessToken(token)) {
+    const tokenHash = hashPersonalAccessToken(token);
+    const pat = await getPersonalAccessTokenByHash(tokenHash);
+    const requiredScope = getMcpScope();
+
+    if (!pat || pat.status !== "active") {
+      await logAuthEvent({
+        eventType: "mcp_access",
+        route: "/mcp",
+        outcome: "denied",
+        reason: pat ? "PAT disabled" : "PAT not found",
+        email: pat?.ownerEmail ?? null,
+        clientId: pat?.tokenPrefix ?? null,
+        ...requestContext,
+      });
+      return {
+        ok: false,
+        response: unauthorized("invalid_token", "Personal access token is invalid or disabled."),
+      };
+    }
+
+    if (pat.expiresAt && pat.expiresAt.getTime() <= Date.now()) {
+      await logAuthEvent({
+        eventType: "mcp_access",
+        route: "/mcp",
+        outcome: "denied",
+        reason: "PAT expired",
+        email: pat.ownerEmail,
+        clientId: pat.tokenPrefix,
+        ...requestContext,
+      });
+      return {
+        ok: false,
+        response: unauthorized("invalid_token", "Personal access token has expired."),
+      };
+    }
+
+    const scopes = pat.allowedScope.split(/\s+/).filter(Boolean);
+    if (!scopes.includes(requiredScope)) {
+      await logAuthEvent({
+        eventType: "mcp_access",
+        route: "/mcp",
+        outcome: "denied",
+        reason: `PAT missing required scope ${requiredScope}`,
+        email: pat.ownerEmail,
+        clientId: pat.tokenPrefix,
+        ...requestContext,
+      });
+      return {
+        ok: false,
+        response: unauthorized("insufficient_scope", `Token must include ${requiredScope}.`),
+      };
+    }
+
+    await touchPersonalAccessToken(pat.id);
+    await logAuthEvent({
+      eventType: "mcp_access",
+      route: "/mcp",
+      outcome: "success",
+      reason: "PAT auth",
+      email: pat.ownerEmail,
+      clientId: pat.tokenPrefix,
+      ...requestContext,
+    });
+
+    return {
+      ok: true,
+      authInfo: {
+        token,
+        clientId: pat.tokenPrefix,
+        scopes,
+        resource: new URL(`${getPublicEnv().baseUrl}/mcp`),
+        extra: {
+          auth_type: "pat",
+          owner_email: pat.ownerEmail,
+          token_label: pat.label,
+        },
+      },
+    };
   }
 
   try {

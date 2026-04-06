@@ -1,20 +1,31 @@
 import { and, desc, eq, ilike, or } from "drizzle-orm";
 
 import { getDb, isDatabaseConfigured } from "@/lib/db";
-import { adminUsers, authAuditLogs, mcpClients } from "@/lib/db/schema";
+import {
+  adminUsers,
+  authAuditLogs,
+  mcpClients,
+  personalAccessTokens,
+} from "@/lib/db/schema";
 import {
   createAdminUserInSupabase,
   createAuditLogInSupabase,
   createMcpClientInSupabase,
+  createPersonalAccessTokenInSupabase,
+  deletePersonalAccessTokenInSupabase,
   getAdminUserByEmailFromSupabase,
   getMcpClientByClientIdFromSupabase,
+  getPersonalAccessTokenByHashFromSupabase,
   isSupabaseConfigured,
   listAdminUsersFromSupabase,
   listAuditLogsFromSupabase,
   listMcpClientsFromSupabase,
+  listPersonalAccessTokensFromSupabase,
+  touchPersonalAccessTokenInSupabase,
   touchAdminLastLoginInSupabase,
   updateAdminUserInSupabase,
   updateMcpClientInSupabase,
+  updatePersonalAccessTokenInSupabase,
 } from "@/lib/supabase/admin-store";
 
 export async function getAdminUserByEmail(email: string) {
@@ -325,4 +336,151 @@ export async function searchAdminUsers(query: string) {
       ),
     )
     .orderBy(adminUsers.email);
+}
+
+export async function listPersonalAccessTokens() {
+  if (!isDatabaseConfigured()) {
+    return [];
+  }
+
+  if (isSupabaseConfigured()) {
+    return listPersonalAccessTokensFromSupabase();
+  }
+
+  return getDb()
+    .select()
+    .from(personalAccessTokens)
+    .orderBy(desc(personalAccessTokens.createdAt));
+}
+
+export async function getPersonalAccessTokenByHash(tokenHash: string) {
+  if (!isDatabaseConfigured()) {
+    return null;
+  }
+
+  if (isSupabaseConfigured()) {
+    return getPersonalAccessTokenByHashFromSupabase(tokenHash);
+  }
+
+  const [token] = await getDb()
+    .select()
+    .from(personalAccessTokens)
+    .where(eq(personalAccessTokens.tokenHash, tokenHash))
+    .limit(1);
+
+  return token ?? null;
+}
+
+export async function createPersonalAccessToken(input: {
+  label: string;
+  ownerEmail: string;
+  tokenValue: string;
+  tokenPrefix: string;
+  tokenHash: string;
+  allowedScope?: string;
+  notes?: string | null;
+  expiresAt?: string | null;
+}) {
+  if (isSupabaseConfigured()) {
+    return createPersonalAccessTokenInSupabase(input);
+  }
+
+  const [row] = await getDb()
+    .insert(personalAccessTokens)
+    .values({
+      label: input.label,
+      ownerEmail: input.ownerEmail.toLowerCase(),
+      tokenValue: input.tokenValue,
+      tokenPrefix: input.tokenPrefix,
+      tokenHash: input.tokenHash,
+      allowedScope: input.allowedScope ?? "mcp:read",
+      notes: input.notes ?? null,
+      expiresAt: input.expiresAt ? new Date(input.expiresAt) : null,
+    })
+    .returning();
+
+  return row;
+}
+
+export async function updatePersonalAccessToken(input: {
+  id: string;
+  label?: string;
+  ownerEmail?: string;
+  allowedScope?: string;
+  notes?: string | null;
+  status?: "active" | "disabled";
+  expiresAt?: string | null;
+}) {
+  if (isSupabaseConfigured()) {
+    return updatePersonalAccessTokenInSupabase(input);
+  }
+
+  const payload: Partial<typeof personalAccessTokens.$inferInsert> = {
+    updatedAt: new Date(),
+  };
+
+  if (input.label) {
+    payload.label = input.label;
+  }
+  if (input.ownerEmail) {
+    payload.ownerEmail = input.ownerEmail.toLowerCase();
+  }
+  if (input.allowedScope) {
+    payload.allowedScope = input.allowedScope;
+  }
+  if (input.notes !== undefined) {
+    payload.notes = input.notes;
+  }
+  if (input.status) {
+    payload.status = input.status;
+  }
+  if (input.expiresAt !== undefined) {
+    payload.expiresAt = input.expiresAt ? new Date(input.expiresAt) : null;
+  }
+
+  const [row] = await getDb()
+    .update(personalAccessTokens)
+    .set(payload)
+    .where(eq(personalAccessTokens.id, input.id))
+    .returning();
+
+  return row ?? null;
+}
+
+export async function touchPersonalAccessToken(id: string) {
+  if (!isDatabaseConfigured()) {
+    return null;
+  }
+
+  if (isSupabaseConfigured()) {
+    return touchPersonalAccessTokenInSupabase(id);
+  }
+
+  const [row] = await getDb()
+    .update(personalAccessTokens)
+    .set({
+      lastUsedAt: new Date(),
+      updatedAt: new Date(),
+    })
+    .where(eq(personalAccessTokens.id, id))
+    .returning();
+
+  return row ?? null;
+}
+
+export async function deletePersonalAccessToken(id: string) {
+  if (!isDatabaseConfigured()) {
+    return null;
+  }
+
+  if (isSupabaseConfigured()) {
+    return deletePersonalAccessTokenInSupabase(id);
+  }
+
+  const [row] = await getDb()
+    .delete(personalAccessTokens)
+    .where(eq(personalAccessTokens.id, id))
+    .returning();
+
+  return row ?? null;
 }

@@ -109,6 +109,26 @@ export async function GET() {
           },
         },
       },
+      "/api/admin/personal-access-tokens": {
+        get: {
+          summary: "List personal access tokens",
+          responses: {
+            "200": { description: "PAT list" },
+          },
+        },
+        post: {
+          summary: "Create personal access token",
+          responses: {
+            "201": { description: "PAT created" },
+          },
+        },
+        patch: {
+          summary: "Update or revoke personal access token",
+          responses: {
+            "200": { description: "PAT updated" },
+          },
+        },
+      },
       "/api/admin/audit-logs": {
         get: {
           summary: "List auth audit logs",
