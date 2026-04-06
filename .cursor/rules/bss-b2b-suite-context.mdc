@@ -1,0 +1,40 @@
+---
+description: BSS B2B BA-agents — map context folder, app routing, changelog usage
+alwaysApply: true
+---
+
+# BA-agents workspace
+
+This repo is **PM/BA context only** (markdown under `context/`). Canonical paths are **`context/...`** with folder-based app bundles. Ignore older `company-context/` references and flat legacy paths such as `context/LOCK_SKILL.md`.
+
+## Load order
+
+1. **`context/COMPANY.md`** — company, B2B Suite framing, ICP.
+2. **`context/references/CUSTOMER_SEGMENTS.md`** — only when the ask needs personas, segment fit, objections, or messaging hooks.
+3. **`context/references/discovery/DISCOVERY_SYNTHESIS_TEMPLATE.md`** — only when the ask is to synthesize discovery signals, research findings, support inputs, or opportunity patterns.
+4. **`context/references/prd/PRD_DELIVERY_GUIDELINES.md`** — only when the ask is a PRD, RQM, PRD review, Jira breakdown, user story, estimation, or sprint prioritization.
+5. **`context/references/prd/SOCRATIC_QUESTIONING_FRAMEWORK.md`** — only when the PRD still has weak problem framing, weak evidence, fuzzy scope, or unclear success criteria.
+6. **`context/product-analysis/SKILL.md`** + `context/product-analysis/references/*.md` — only when the ask is about strategic analysis, option comparison, DHM, SWOT, Devil's Advocate, moat, initiative prioritization, or discovery synthesis.
+7. **`context/help-docs/SKILL.md`** + `context/help-docs/references/PILLAR_PAGE_TEMPLATE.md` — only when the ask is for merchant-facing help docs, setup guides, troubleshooting docs, or support content.
+8. **One app bundle** by topic (see table below): `context/<app>/SKILL.md` + `context/<app>/references/APP_CONTEXT.md`.
+9. **`context/<app>/references/COMPETITIVE_CONTEXT.md`** — only for competitors, positioning, win/loss.
+10. **`context/changelog/`** — before stating shipped behavior or public feature names for RQM/specs or help docs; use `changelog-template.md` for structure.
+
+## App routing
+
+| Primary topic | App context | Skill (response skeleton + rules) |
+|---------------|-------------|-------------------------------------|
+| Login/passcode, hide price, access, Lock admin | `context/lock/references/APP_CONTEXT.md` | `context/lock/SKILL.md` |
+| RFQ, quote history, quick order, CSV bulk | `context/quote/references/APP_CONTEXT.md` | `context/quote/SKILL.md` |
+| Registration, price lists, wholesale rules, Solution admin | `context/solution/references/APP_CONTEXT.md` | `context/solution/SKILL.md` |
+| Strategic analysis, DHM, SWOT, Devil's Advocate, prioritization | load the relevant app context if app-specific | `context/product-analysis/SKILL.md` |
+| Discovery synthesis, evidence review, opportunity mapping | load the relevant app context if module-specific | `context/product-analysis/SKILL.md` |
+| Merchant help docs, setup guides, troubleshooting, support articles | load the relevant app context if feature-specific | `context/help-docs/SKILL.md` |
+
+**Cross-app or portfolio PRD** — still start from `COMPANY.md` + the relevant app contexts; load `context/references/CUSTOMER_SEGMENTS.md` when segmentation materially affects the recommendation, load `context/references/prd/PRD_DELIVERY_GUIDELINES.md` for structure and review method, load `context/references/prd/SOCRATIC_QUESTIONING_FRAMEWORK.md` when the feature rationale is still weak, load `context/product-analysis/SKILL.md` when the decision needs strategic stress-testing, and call out scope boundaries using each app's "vs other apps" section.
+
+**Merchant help docs** — start from the relevant app context, load `context/help-docs/SKILL.md` and `context/help-docs/references/PILLAR_PAGE_TEMPLATE.md`, then check `context/changelog/` before describing public behavior or availability.
+
+## Output
+
+For specs/RQM/PRDs: follow the **section order** defined in the relevant `context/<app>/SKILL.md` and the shared PRD references when loaded. Keep **requirement titles in English** and **requirement body content in Vietnamese**. Keep product names in English. Keep Jira titles in English and Jira descriptions in Vietnamese.

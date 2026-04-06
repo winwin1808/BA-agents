@@ -1,0 +1,12 @@
+---
+description: Changelog markdown — align with BSS package templates and app split
+globs: context/changelog/**/*.md
+alwaysApply: false
+---
+
+# Changelog edits (`context/changelog/`)
+
+- Follow patterns in **`context/changelog/changelog-template.md`**.
+- **Per-app** files: `changelog-bss-b2b-lock-login-password.md`, `changelog-bss-b2b-request-a-quote-quick.md`, `changelog-bss-b2b-wholesale-solution.md`; package rollups: `changelog-package-*.md`.
+- Preserve **duplicate version labels** when the source had them; do not invent new version numbers to “fix” duplicates.
+- Wording should stay **merchant-facing** and consistent with how each app names features in **`context/*_APP_CONTEXT.md`**.

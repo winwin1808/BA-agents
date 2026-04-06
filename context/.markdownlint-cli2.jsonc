@@ -1,0 +1,7 @@
+{
+  // Line-length limits are noisy for long URLs, tables, and YAML front matter in skills.
+  "config": {
+    "default": true,
+    "MD013": false
+  }
+}
