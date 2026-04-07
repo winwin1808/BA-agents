@@ -1,0 +1,14 @@
+interface:
+  display_name: "BA Agents MCP"
+  short_description: "Retrieve trusted B2B Suite BA/PM context and UI refs"
+  brand_color: "#1F4E79"
+  default_prompt: "Use $use-ba-agents-mcp to retrieve trusted BA/PM context, open canonical B2B Suite docs, and generate a basic UI reference when the UX/UI task is confirmed."
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "baAgents"
+      description: "BA Agents MCP server for BSS B2B Suite context and reference UI generation"
+      transport: "streamable_http"
+      url: "https://ba-agents.vercel.app/mcp"
+policy:
+  allow_implicit_invocation: true

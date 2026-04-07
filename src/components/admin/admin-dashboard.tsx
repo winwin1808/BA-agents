@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useMemo, useRef, useState, useTransition, type RefObject } from "react";
 
+import { buildTokenSharePackage } from "@/lib/admin/token-share";
+
 type AdminUserRow = {
   id: string;
   email: string;
@@ -253,7 +255,8 @@ function CreatedTokenModal(props: {
   token: string | null;
   inputRef: RefObject<HTMLInputElement | null>;
   onClose: () => void;
-  onCopy: () => void;
+  onCopyPackage: () => void;
+  onCopyToken: () => void;
   onSelect: () => void;
 }) {
   if (!props.open || !props.token) {
@@ -267,7 +270,7 @@ function CreatedTokenModal(props: {
           <div>
             <h3 className="text-2xl font-semibold">Token created</h3>
             <p className="mt-2 text-sm leading-7 text-neutral-600">
-              Copy this token now. You can also select it manually from the field below.
+              Copy the raw token for direct use, or copy a share package that includes the token plus the BA Agents MCP skill text.
             </p>
           </div>
           <button className={buttonClassName} onClick={props.onClose} type="button">
@@ -295,8 +298,11 @@ function CreatedTokenModal(props: {
           <button className={buttonClassName} onClick={props.onSelect} type="button">
             Select token
           </button>
-          <button className={primaryButtonClassName} onClick={props.onCopy} type="button">
-            Copy token
+          <button className={buttonClassName} onClick={props.onCopyToken} type="button">
+            Copy token only
+          </button>
+          <button className={primaryButtonClassName} onClick={props.onCopyPackage} type="button">
+            Copy token + skill
           </button>
         </div>
       </div>
@@ -494,7 +500,12 @@ export function AdminDashboard(props: {
       <CreatedTokenModal
         inputRef={createdTokenInputRef}
         onClose={() => setCreatedToken(null)}
-        onCopy={() => {
+        onCopyPackage={() => {
+          if (createdToken) {
+            void copyText(buildTokenSharePackage(createdToken), "new PAT + skill");
+          }
+        }}
+        onCopyToken={() => {
           if (createdToken) {
             void copyText(createdToken, "new PAT");
           }
