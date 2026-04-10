@@ -138,6 +138,9 @@ function buildPrompt(input: GenerateReferenceUiInput) {
     "- Keep copy short and functional.",
     "- Focus on layout and information hierarchy, not polish.",
     "- All visible copy must be JSX-safe.",
+    "- Every text label, option, badge, table cell, mock-data value, and object string must be emitted as valid JSX text or a quoted JavaScript string.",
+    "- Never output bare words or slash-separated phrases inside JavaScript objects, arrays, props, or expressions unless they are quoted strings.",
+    "- Avoid prose copied verbatim into code-like structures. If you need sample content, keep it short and wrap every value in quotes.",
     "- Never place raw '<' or '>' characters directly inside JSX text nodes, labels, table cells, or <option> text.",
     "- Rewrite comparison copy into words. Example: use 'Gold Tier (Annual over $500k)' instead of 'Gold Tier (Annual > $500k)'.",
     "- Rewrite '>=' as 'at least', '<=' as 'up to' or 'at most', '>' as 'over', and '<' as 'under' when those symbols appear in UI copy.",
@@ -155,6 +158,9 @@ function buildSystemPrompt() {
     "Avoid fancy visuals, dark mode, icon libraries, charts, multi-step flows, and complex interactions.",
     "Use a single responsive page with the minimum structure needed to communicate the concept.",
     "Write code that parses on the first run.",
+    "Return only valid React + Tailwind TSX.",
+    "When writing mock data, every string value must be quoted.",
+    "Never leave bare identifiers as visible content, sample values, or object properties.",
     "Do not use raw '<' or '>' characters inside JSX text content; rewrite the copy or escape it for TSX.",
   ].join(" ");
 }
