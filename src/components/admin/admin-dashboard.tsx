@@ -47,6 +47,17 @@ type PersonalAccessTokenRow = {
   expiresAt: string | null;
 };
 
+type OpenAiKeyRow = {
+  configured: boolean;
+  status: "unconfigured" | "active" | "disabled" | "invalid";
+  label: string | null;
+  modelName: string | null;
+  maskedPreview: string | null;
+  validationError: string | null;
+  lastValidatedAt: string | null;
+  updatedAt: string | null;
+};
+
 type Toast = {
   id: number;
   tone: "success" | "info" | "error";
@@ -317,6 +328,8 @@ export function AdminDashboard(props: {
   personalAccessTokens: PersonalAccessTokenRow[];
   auditLogs: AuditLogRow[];
   dbConfigured: boolean;
+  openAiKey: OpenAiKeyRow;
+  secretsConfigured: boolean;
 }) {
   const router = useRouter();
   const createdTokenInputRef = useRef<HTMLInputElement | null>(null);
@@ -345,7 +358,11 @@ export function AdminDashboard(props: {
     }, 2800);
   }
 
-  async function submitJson(path: string, method: "POST" | "PATCH" | "DELETE", body: unknown) {
+  async function submitJson(
+    path: string,
+    method: "POST" | "PUT" | "PATCH" | "DELETE",
+    body: unknown,
+  ) {
     const response = await fetch(path, {
       method,
       headers: {
@@ -720,6 +737,127 @@ export function AdminDashboard(props: {
           ))}
         </div>
       </section>
+
+      {props.currentRole === "owner" ? (
+        <section className="panel p-6">
+          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+            <div>
+              <h2 className="text-2xl font-semibold">Gemini workflow settings</h2>
+              <p className="mt-1 text-sm text-neutral-600">
+                Manage the encrypted Gemini API key and model used by public workflow generation.
+              </p>
+            </div>
+            <div className="rounded-full border border-neutral-300 px-3 py-1 text-xs font-medium uppercase tracking-wide text-neutral-500">
+              {props.openAiKey.status}
+            </div>
+          </div>
+
+          {!props.secretsConfigured ? (
+            <div className="mt-5 rounded-2xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+              <code>ADMIN_SECRETS_ENCRYPTION_KEY</code> is not configured. This is the server-side master key for encrypting provider secrets saved from admin.
+            </div>
+          ) : null}
+
+          <div className="mt-5 grid gap-3 rounded-2xl border border-neutral-200 bg-white/80 p-4 md:grid-cols-2">
+            <div>
+              <p className="text-sm font-medium">Current key label</p>
+              <p className="mt-1 text-sm text-neutral-600">{props.openAiKey.label ?? "No key configured"}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium">Model</p>
+              <p className="mt-1 text-sm text-neutral-600">{props.openAiKey.modelName ?? "—"}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium">Masked preview</p>
+              <p className="mt-1 font-mono text-sm text-neutral-600">
+                {props.openAiKey.maskedPreview ?? "—"}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm font-medium">Updated at</p>
+              <p className="mt-1 text-sm text-neutral-600">
+                {formatDateTime(props.openAiKey.updatedAt)}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm font-medium">Last validated</p>
+              <p className="mt-1 text-sm text-neutral-600">
+                {formatDateTime(props.openAiKey.lastValidatedAt)}
+              </p>
+            </div>
+            {props.openAiKey.validationError ? (
+              <div className="md:col-span-2">
+                <p className="text-sm font-medium text-rose-700">Validation error</p>
+                <p className="mt-1 text-sm text-rose-700">{props.openAiKey.validationError}</p>
+              </div>
+            ) : null}
+          </div>
+
+          <form
+            className="mt-5 grid gap-3 md:grid-cols-[1fr_1fr_1.2fr_auto]"
+            onSubmit={(event) => {
+              event.preventDefault();
+              const formElement = event.currentTarget;
+              const form = new FormData(formElement);
+              handleFormAction(async () => {
+                await submitJson("/api/admin/openai-key", "PUT", {
+                  label: form.get("label"),
+                  modelName: form.get("modelName"),
+                  apiKey: form.get("apiKey"),
+                });
+                formElement.reset();
+              });
+            }}
+          >
+            <input
+              className={fieldClassName}
+              defaultValue={props.openAiKey.label ?? ""}
+              disabled={!props.secretsConfigured}
+              name="label"
+              placeholder="Gemini workflow generation"
+              required
+            />
+            <input
+              className={fieldClassName}
+              defaultValue={props.openAiKey.modelName ?? "gemini-2.5-flash"}
+              disabled={!props.secretsConfigured}
+              name="modelName"
+              placeholder="gemini-2.5-flash"
+              required
+            />
+            <input
+              className={fieldClassName}
+              disabled={!props.secretsConfigured}
+              name="apiKey"
+              placeholder="AIza..."
+              required
+              type="password"
+            />
+            <button
+              className={primaryButtonClassName}
+              disabled={isPending || !props.secretsConfigured}
+              type="submit"
+            >
+              Save settings
+            </button>
+          </form>
+
+          <div className="mt-4 flex justify-end">
+            <button
+              className={buttonClassName}
+              disabled={isPending || !props.openAiKey.configured}
+              onClick={() =>
+                handleFormAction(async () => {
+                  await submitJson("/api/admin/openai-key", "DELETE", {});
+                })
+              }
+              type="button"
+            >
+              Disable current key
+            </button>
+          </div>
+        </section>
+      ) : null}
 
       <section className="panel p-6">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">

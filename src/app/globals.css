@@ -60,3 +60,8 @@ main {
   font-weight: 600;
   letter-spacing: 0.02em;
 }
+
+.bjs-container {
+  background:
+    linear-gradient(180deg, rgba(251, 250, 247, 0.98) 0%, rgba(247, 244, 238, 0.98) 100%);
+}

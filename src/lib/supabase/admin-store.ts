@@ -2,6 +2,15 @@ import { getPostgresUrl, getSupabaseServiceRoleKey, getSupabaseUrl } from "@/lib
 
 type RecordStatus = "active" | "disabled";
 type AdminRole = "owner" | "admin";
+type ProviderApiKeyProvider = "openai";
+type ProviderApiKeyValidationStatus = "valid" | "invalid";
+type WorkflowContextScope = "lock" | "quote" | "solution" | "cross_suite";
+type WorkflowGenerationOutcome =
+  | "success"
+  | "error"
+  | "rate_limited"
+  | "unavailable"
+  | "invalid_input";
 
 export interface AdminUserRecord {
   id: string;
@@ -55,6 +64,52 @@ export interface PersonalAccessTokenRecord {
   updatedAt: Date;
 }
 
+export interface ProviderApiKeyRecord {
+  id: string;
+  provider: ProviderApiKeyProvider;
+  label: string;
+  modelName: string;
+  encryptedSecret: string;
+  maskedPreview: string;
+  status: RecordStatus;
+  validationStatus: ProviderApiKeyValidationStatus;
+  validationError: string | null;
+  lastValidatedAt: Date | null;
+  createdByAdminUserId: string | null;
+  updatedByAdminUserId: string | null;
+  deactivatedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface WorkflowArtifactRecord {
+  id: string;
+  slug: string;
+  title: string;
+  summary: string;
+  contextScope: WorkflowContextScope;
+  prompt: string;
+  contextSnapshot: unknown;
+  flowGraphJson: unknown;
+  jiraPackJson: unknown;
+  bpmnXml: string;
+  modelName: string;
+  latencyMs: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface WorkflowGenerationAttemptRecord {
+  id: string;
+  ipHash: string;
+  promptChars: number;
+  contextScope: WorkflowContextScope;
+  outcome: WorkflowGenerationOutcome;
+  errorCode: string | null;
+  artifactId: string | null;
+  createdAt: Date;
+}
+
 type AdminUserRow = {
   id: string;
   email: string;
@@ -105,6 +160,52 @@ type PersonalAccessTokenRow = {
   expires_at: string | null;
   created_at: string;
   updated_at: string;
+};
+
+type ProviderApiKeyRow = {
+  id: string;
+  provider: ProviderApiKeyProvider;
+  label: string;
+  model_name: string;
+  encrypted_secret: string;
+  masked_preview: string;
+  status: RecordStatus;
+  validation_status: ProviderApiKeyValidationStatus;
+  validation_error: string | null;
+  last_validated_at: string | null;
+  created_by_admin_user_id: string | null;
+  updated_by_admin_user_id: string | null;
+  deactivated_at: string | null;
+  created_at: string;
+  updated_at: string;
+};
+
+type WorkflowArtifactRow = {
+  id: string;
+  slug: string;
+  title: string;
+  summary: string;
+  context_scope: WorkflowContextScope;
+  prompt: string;
+  context_snapshot: unknown;
+  flow_graph_json: unknown;
+  jira_pack_json: unknown;
+  bpmn_xml: string;
+  model_name: string;
+  latency_ms: number;
+  created_at: string;
+  updated_at: string;
+};
+
+type WorkflowGenerationAttemptRow = {
+  id: string;
+  ip_hash: string;
+  prompt_chars: number;
+  context_scope: WorkflowContextScope;
+  outcome: WorkflowGenerationOutcome;
+  error_code: string | null;
+  artifact_id: string | null;
+  created_at: string;
 };
 
 function mapAdminUser(row: AdminUserRow): AdminUserRecord {
@@ -164,6 +265,60 @@ function mapPersonalAccessToken(row: PersonalAccessTokenRow): PersonalAccessToke
     expiresAt: row.expires_at ? new Date(row.expires_at) : null,
     createdAt: new Date(row.created_at),
     updatedAt: new Date(row.updated_at),
+  };
+}
+
+function mapProviderApiKey(row: ProviderApiKeyRow): ProviderApiKeyRecord {
+  return {
+    id: row.id,
+    provider: row.provider,
+    label: row.label,
+    modelName: row.model_name,
+    encryptedSecret: row.encrypted_secret,
+    maskedPreview: row.masked_preview,
+    status: row.status,
+    validationStatus: row.validation_status,
+    validationError: row.validation_error,
+    lastValidatedAt: row.last_validated_at ? new Date(row.last_validated_at) : null,
+    createdByAdminUserId: row.created_by_admin_user_id,
+    updatedByAdminUserId: row.updated_by_admin_user_id,
+    deactivatedAt: row.deactivated_at ? new Date(row.deactivated_at) : null,
+    createdAt: new Date(row.created_at),
+    updatedAt: new Date(row.updated_at),
+  };
+}
+
+function mapWorkflowArtifact(row: WorkflowArtifactRow): WorkflowArtifactRecord {
+  return {
+    id: row.id,
+    slug: row.slug,
+    title: row.title,
+    summary: row.summary,
+    contextScope: row.context_scope,
+    prompt: row.prompt,
+    contextSnapshot: row.context_snapshot,
+    flowGraphJson: row.flow_graph_json,
+    jiraPackJson: row.jira_pack_json,
+    bpmnXml: row.bpmn_xml,
+    modelName: row.model_name,
+    latencyMs: row.latency_ms,
+    createdAt: new Date(row.created_at),
+    updatedAt: new Date(row.updated_at),
+  };
+}
+
+function mapWorkflowGenerationAttempt(
+  row: WorkflowGenerationAttemptRow,
+): WorkflowGenerationAttemptRecord {
+  return {
+    id: row.id,
+    ipHash: row.ip_hash,
+    promptChars: row.prompt_chars,
+    contextScope: row.context_scope,
+    outcome: row.outcome,
+    errorCode: row.error_code,
+    artifactId: row.artifact_id,
+    createdAt: new Date(row.created_at),
   };
 }
 
@@ -647,4 +802,235 @@ export async function touchPersonalAccessTokenInSupabase(
   );
 
   return rows[0] ? mapPersonalAccessToken(rows[0]) : null;
+}
+
+export async function getLatestProviderApiKeyFromSupabase(
+  provider: ProviderApiKeyProvider,
+): Promise<ProviderApiKeyRecord | null> {
+  const params = new URLSearchParams({
+    select: "*",
+    provider: `eq.${provider}`,
+    order: "created_at.desc",
+    limit: "1",
+  });
+
+  const rows = await supabaseRequest<ProviderApiKeyRow[]>(
+    `/provider_api_keys?${params.toString()}`,
+  );
+
+  return rows[0] ? mapProviderApiKey(rows[0]) : null;
+}
+
+export async function getActiveProviderApiKeyFromSupabase(
+  provider: ProviderApiKeyProvider,
+): Promise<ProviderApiKeyRecord | null> {
+  const params = new URLSearchParams({
+    select: "*",
+    provider: `eq.${provider}`,
+    status: "eq.active",
+    validation_status: "eq.valid",
+    order: "created_at.desc",
+    limit: "1",
+  });
+
+  const rows = await supabaseRequest<ProviderApiKeyRow[]>(
+    `/provider_api_keys?${params.toString()}`,
+  );
+
+  return rows[0] ? mapProviderApiKey(rows[0]) : null;
+}
+
+export async function createProviderApiKeyInSupabase(input: {
+  provider: ProviderApiKeyProvider;
+  label: string;
+  modelName: string;
+  encryptedSecret: string;
+  maskedPreview: string;
+  status: RecordStatus;
+  validationStatus: ProviderApiKeyValidationStatus;
+  validationError?: string | null;
+  lastValidatedAt?: string | null;
+  createdByAdminUserId?: string | null;
+  updatedByAdminUserId?: string | null;
+  deactivatedAt?: string | null;
+}): Promise<ProviderApiKeyRecord> {
+  const rows = await supabaseRequest<ProviderApiKeyRow[]>(
+    "/provider_api_keys",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify([
+        {
+          provider: input.provider,
+          label: input.label,
+          model_name: input.modelName,
+          encrypted_secret: input.encryptedSecret,
+          masked_preview: input.maskedPreview,
+          status: input.status,
+          validation_status: input.validationStatus,
+          validation_error: input.validationError ?? null,
+          last_validated_at: input.lastValidatedAt ?? null,
+          created_by_admin_user_id: input.createdByAdminUserId ?? null,
+          updated_by_admin_user_id: input.updatedByAdminUserId ?? null,
+          deactivated_at: input.deactivatedAt ?? null,
+        },
+      ]),
+    },
+  );
+
+  return mapProviderApiKey(rows[0]);
+}
+
+export async function disableActiveProviderApiKeysInSupabase(input: {
+  provider: ProviderApiKeyProvider;
+  updatedByAdminUserId?: string | null;
+}): Promise<void> {
+  await supabaseRequest<ProviderApiKeyRow[]>(
+    `/provider_api_keys?provider=eq.${input.provider}&status=eq.active`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        status: "disabled",
+        deactivated_at: new Date().toISOString(),
+        updated_by_admin_user_id: input.updatedByAdminUserId ?? null,
+        updated_at: new Date().toISOString(),
+      }),
+    },
+  );
+}
+
+export async function createWorkflowArtifactInSupabase(input: {
+  slug: string;
+  title: string;
+  summary: string;
+  contextScope: WorkflowContextScope;
+  prompt: string;
+  contextSnapshot: unknown;
+  flowGraphJson: unknown;
+  jiraPackJson: unknown;
+  bpmnXml: string;
+  modelName: string;
+  latencyMs: number;
+}): Promise<WorkflowArtifactRecord> {
+  const rows = await supabaseRequest<WorkflowArtifactRow[]>(
+    "/workflow_artifacts",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify([
+        {
+          slug: input.slug,
+          title: input.title,
+          summary: input.summary,
+          context_scope: input.contextScope,
+          prompt: input.prompt,
+          context_snapshot: input.contextSnapshot,
+          flow_graph_json: input.flowGraphJson,
+          jira_pack_json: input.jiraPackJson,
+          bpmn_xml: input.bpmnXml,
+          model_name: input.modelName,
+          latency_ms: input.latencyMs,
+        },
+      ]),
+    },
+  );
+
+  return mapWorkflowArtifact(rows[0]);
+}
+
+export async function listWorkflowArtifactsFromSupabase(input?: {
+  cursor?: string | null;
+  limit?: number;
+}): Promise<WorkflowArtifactRecord[]> {
+  const params = new URLSearchParams({
+    select: "*",
+    order: "created_at.desc",
+    limit: String(Math.min(Math.max(input?.limit ?? 12, 1), 50)),
+  });
+
+  if (input?.cursor) {
+    params.set("created_at", `lt.${input.cursor}`);
+  }
+
+  const rows = await supabaseRequest<WorkflowArtifactRow[]>(
+    `/workflow_artifacts?${params.toString()}`,
+  );
+
+  return rows.map(mapWorkflowArtifact);
+}
+
+export async function getWorkflowArtifactBySlugFromSupabase(
+  slug: string,
+): Promise<WorkflowArtifactRecord | null> {
+  const params = new URLSearchParams({
+    select: "*",
+    slug: `eq.${slug}`,
+    limit: "1",
+  });
+
+  const rows = await supabaseRequest<WorkflowArtifactRow[]>(
+    `/workflow_artifacts?${params.toString()}`,
+  );
+
+  return rows[0] ? mapWorkflowArtifact(rows[0]) : null;
+}
+
+export async function createWorkflowGenerationAttemptInSupabase(input: {
+  ipHash: string;
+  promptChars: number;
+  contextScope: WorkflowContextScope;
+  outcome: WorkflowGenerationOutcome;
+  errorCode?: string | null;
+  artifactId?: string | null;
+}): Promise<WorkflowGenerationAttemptRecord> {
+  const rows = await supabaseRequest<WorkflowGenerationAttemptRow[]>(
+    "/workflow_generation_attempts",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify([
+        {
+          ip_hash: input.ipHash,
+          prompt_chars: input.promptChars,
+          context_scope: input.contextScope,
+          outcome: input.outcome,
+          error_code: input.errorCode ?? null,
+          artifact_id: input.artifactId ?? null,
+        },
+      ]),
+    },
+  );
+
+  return mapWorkflowGenerationAttempt(rows[0]);
+}
+
+export async function listWorkflowGenerationAttemptsFromSupabase(input: {
+  ipHash: string;
+  since: string;
+}): Promise<WorkflowGenerationAttemptRecord[]> {
+  const params = new URLSearchParams({
+    select: "*",
+    ip_hash: `eq.${input.ipHash}`,
+    created_at: `gte.${input.since}`,
+    order: "created_at.desc",
+    limit: "100",
+  });
+
+  const rows = await supabaseRequest<WorkflowGenerationAttemptRow[]>(
+    `/workflow_generation_attempts?${params.toString()}`,
+  );
+
+  return rows.map(mapWorkflowGenerationAttempt);
 }

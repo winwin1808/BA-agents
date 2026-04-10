@@ -86,6 +86,14 @@ export function getV0ApiKeys(): string[] {
   return singleKey ? [singleKey] : [];
 }
 
+export function getAdminSecretsEncryptionKey(): string | undefined {
+  return readEnv("ADMIN_SECRETS_ENCRYPTION_KEY");
+}
+
+export function hasAdminSecretsEncryptionKey(): boolean {
+  return Boolean(getAdminSecretsEncryptionKey());
+}
+
 export function getBootstrapEmails(): string[] {
   return (readEnv("ADMIN_BOOTSTRAP_EMAILS") ?? "")
     .split(",")

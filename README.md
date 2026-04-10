@@ -14,6 +14,7 @@ This README is for admins who manage the BA Agents MCP deployment, access, and t
 - Add admin users
 - Add MCP OAuth clients when needed
 - Create and revoke personal access tokens (PATs) for end users
+- Configure the Gemini settings used by public workflow generation
 
 ## Required environment variables
 
@@ -30,6 +31,7 @@ MCP_RESOURCE_AUDIENCE=
 
 SUPABASE_URL=
 SUPABASE_SERVICE_ROLE_KEY=
+ADMIN_SECRETS_ENCRYPTION_KEY=
 
 V0_API_KEYS=
 V0_API_KEY=
@@ -43,6 +45,9 @@ Run these SQL files in Supabase:
 
 1. [drizzle/0000_initial.sql](/Users/bssgroup/Code/BA-agents/drizzle/0000_initial.sql)
 2. [drizzle/0001_personal_access_tokens.sql](/Users/bssgroup/Code/BA-agents/drizzle/0001_personal_access_tokens.sql)
+3. [drizzle/0002_pat_token_value.sql](/Users/bssgroup/Code/BA-agents/drizzle/0002_pat_token_value.sql)
+4. [drizzle/0003_workflows_and_provider_keys.sql](/Users/bssgroup/Code/BA-agents/drizzle/0003_workflows_and_provider_keys.sql)
+5. [drizzle/0004_provider_key_model_name.sql](/Users/bssgroup/Code/BA-agents/drizzle/0004_provider_key_model_name.sql)
 
 Expected tables:
 
@@ -50,6 +55,9 @@ Expected tables:
 - `mcp_clients`
 - `auth_audit_logs`
 - `personal_access_tokens`
+- `provider_api_keys`
+- `workflow_artifacts`
+- `workflow_generation_attempts`
 
 ## Auth0 setup
 
@@ -103,6 +111,14 @@ Use this for the easiest end-user setup.
 Authorization: Bearer bss_pat_xxx
 ```
 
+### Gemini workflow settings
+
+- Only `owner` users can manage the Gemini API key and model in `/admin`
+- The key is stored encrypted at rest and is never shown again after save
+- Public workflow generation at `/workflows` stays unavailable until a valid key is configured
+- `ADMIN_SECRETS_ENCRYPTION_KEY` is only the server-side master key used to encrypt provider secrets stored from `/admin`
+- `ADMIN_SECRETS_ENCRYPTION_KEY` must be set before the admin can save provider keys
+
 ## End-user onboarding
 
 For normal users, send them:
@@ -117,8 +133,9 @@ For normal users, send them:
 2. Run Supabase SQL migrations
 3. Redeploy Vercel
 4. Login to `/admin`
-5. Create PATs for users
-6. Test MCP with one real token
+5. Configure the Gemini workflow settings in `/admin` if you want `/workflows` generation enabled
+6. Create PATs for users
+7. Test MCP with one real token
 
 ## Optional v0 integration
 

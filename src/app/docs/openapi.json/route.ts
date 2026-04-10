@@ -129,6 +129,30 @@ export async function GET() {
           },
         },
       },
+      "/api/admin/openai-key": {
+        get: {
+          summary: "Get Gemini workflow provider settings metadata",
+          responses: {
+            "200": { description: "Gemini workflow settings metadata" },
+            "403": { description: "Owner role required" },
+          },
+        },
+        put: {
+          summary: "Create or replace the active Gemini workflow provider settings",
+          responses: {
+            "200": { description: "Gemini workflow settings metadata after update" },
+            "400": { description: "Validation failed" },
+            "403": { description: "Owner role required" },
+          },
+        },
+        delete: {
+          summary: "Disable the current Gemini workflow provider key",
+          responses: {
+            "200": { description: "Gemini workflow settings metadata after disable" },
+            "403": { description: "Owner role required" },
+          },
+        },
+      },
       "/api/admin/audit-logs": {
         get: {
           summary: "List auth audit logs",
@@ -151,6 +175,39 @@ export async function GET() {
           ],
           responses: {
             "200": { description: "Audit log list" },
+          },
+        },
+      },
+      "/api/workflows": {
+        get: {
+          summary: "List public workflow artifacts",
+          responses: {
+            "200": { description: "Workflow artifact list" },
+          },
+        },
+        post: {
+          summary: "Generate and persist a new workflow artifact",
+          responses: {
+            "201": { description: "Workflow artifact created" },
+            "429": { description: "Rate limited" },
+            "503": { description: "Generation unavailable" },
+          },
+        },
+      },
+      "/api/workflows/{slug}": {
+        get: {
+          summary: "Get one public workflow artifact",
+          parameters: [
+            {
+              name: "slug",
+              in: "path",
+              required: true,
+              schema: { type: "string" },
+            },
+          ],
+          responses: {
+            "200": { description: "Workflow artifact detail" },
+            "404": { description: "Not found" },
           },
         },
       },

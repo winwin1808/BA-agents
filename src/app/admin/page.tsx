@@ -1,4 +1,5 @@
 import { AdminDashboardShell } from "@/components/admin/admin-dashboard-shell";
+import { getOpenAiKeyMetadata } from "@/lib/ai/openai-provider";
 import { requireAdminPageSession } from "@/lib/auth/admin";
 import { isDatabaseConfigured } from "@/lib/db";
 import {
@@ -7,16 +8,27 @@ import {
   listMcpClients,
   listPersonalAccessTokens,
 } from "@/lib/db/queries";
+import { hasAdminSecretsEncryptionKey } from "@/lib/env";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
   const { adminUser } = await requireAdminPageSession("/admin");
-  const [adminUsers, mcpClients, personalAccessTokens, auditLogs] = await Promise.all([
+  const [adminUsers, mcpClients, personalAccessTokens, auditLogs, openAiKey] = await Promise.all([
     listAdminUsers(),
     listMcpClients(),
     listPersonalAccessTokens(),
     listAuditLogs({ limit: 100 }),
+    isDatabaseConfigured() ? getOpenAiKeyMetadata() : Promise.resolve({
+      configured: false,
+      status: "unconfigured" as const,
+      label: null,
+      modelName: null,
+      maskedPreview: null,
+      validationError: null,
+      lastValidatedAt: null,
+      updatedAt: null,
+    }),
   ]);
 
   return (
@@ -73,6 +85,8 @@ export default async function AdminPage() {
           reason: log.reason,
           createdAt: log.createdAt.toISOString(),
         }))}
+        openAiKey={openAiKey}
+        secretsConfigured={hasAdminSecretsEncryptionKey()}
       />
     </main>
   );
