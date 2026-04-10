@@ -33,6 +33,11 @@ const tools = [
     example: "Show the MCP catalog health summary.",
   },
   {
+    name: "generate_workflow_artifact",
+    useCase: "Generate and persist a workflow artifact with a BPMN-ready graph, Jira pack, and shareable URLs.",
+    example: "Generate a workflow artifact for a Quote approval flow with manager approval.",
+  },
+  {
     name: "generate_reference_ui",
     useCase: "Generate a very basic reference UI with v0 from the full confirmed UX/UI task and return a preview URL.",
     example: "Generate a basic reference UI from the confirmed task for Solution pricing setup.",
@@ -215,10 +220,10 @@ Authorization = "Bearer bss_pat_your_token_here"`}
           <div className="rounded-2xl border border-neutral-200 bg-white/80 p-4">
             <p className="font-semibold">Example 6: Generate a workflow diagram</p>
             <p className="mt-2 text-sm leading-7 text-neutral-700">
-              Ask your AI: <code>Create a BPMN workflow for a Quote approval flow where sales drafts the quote, a manager approves large discounts, and the buyer receives follow-up tasks.</code>
+              Ask your AI: <code>Use generate_workflow_artifact with context_scope=&quot;quote&quot; and a prompt for a Quote approval flow where sales drafts the quote, a manager approves large discounts, and the buyer receives follow-up tasks.</code>
             </p>
             <p className="mt-2 text-sm leading-7 text-neutral-700">
-              Use <code>/workflows</code> when you need a saved BPMN diagram plus Jira-ready output instead of only text notes.
+              The MCP client can use <code>generate_workflow_artifact</code> and return the saved artifact URL, workflow graph, and Jira-ready output.
             </p>
           </div>
         </div>
@@ -244,10 +249,11 @@ Authorization = "Bearer bss_pat_your_token_here"`}
       <section className="panel mt-8 p-6">
         <h2 className="text-2xl font-semibold">Diagram generation</h2>
         <p className="mt-3 max-w-3xl text-sm leading-7 text-neutral-700">
-          BA Agents also supports AI-assisted workflow diagram generation at
-          <code> /workflows</code>. This is the right tool when you want to map
-          a business process, approval flow, or operational sequence as a BPMN
-          diagram instead of a text-only spec.
+          BA Agents supports AI-assisted workflow diagram generation through the
+          MCP tool <code>generate_workflow_artifact</code> and the web page
+          <code> /workflows</code>. Use this when you want to map a business
+          process, approval flow, or operational sequence as a BPMN diagram
+          instead of a text-only spec.
         </p>
         <div className="mt-5 grid gap-4 md:grid-cols-2">
           <div className="rounded-2xl border border-neutral-200 bg-white/80 p-4">
@@ -268,6 +274,14 @@ Authorization = "Bearer bss_pat_your_token_here"`}
               <li>Cross-team operational processes that need both diagram and implementation tasks.</li>
             </ul>
           </div>
+        </div>
+        <div className="mt-5 rounded-2xl border border-neutral-200 bg-white/80 p-4">
+          <p className="font-semibold">Recommended MCP input schema</p>
+          <ul className="mt-3 space-y-2 text-sm leading-7 text-neutral-700">
+            <li><code>prompt</code> is required and should describe the trigger, actors, decision points, and end states in one workflow.</li>
+            <li><code>context_scope</code> is required and must be one of <code>lock</code>, <code>quote</code>, <code>solution</code>, or <code>cross_suite</code>.</li>
+            <li><code>include_bpmn_xml</code> is optional. Set it only when your MCP client needs the raw BPMN XML in the tool response.</li>
+          </ul>
         </div>
         <div className="mt-5 rounded-2xl border border-neutral-200 bg-white/80 p-4">
           <p className="font-semibold">Prompting tips</p>
@@ -314,6 +328,9 @@ Authorization = "Bearer bss_pat_your_token_here"`}
             </li>
             <li>
               Use <code>generate_reference_ui</code> only after the UX/UI task is confirmed, and pass the full confirmed task text into the tool call.
+            </li>
+            <li>
+              Use <code>generate_workflow_artifact</code> for one workflow at a time, pass the closest <code>context_scope</code>, and only request <code>include_bpmn_xml</code> when you need raw XML back.
             </li>
           </ul>
         </div>

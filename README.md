@@ -14,7 +14,7 @@ This README is for admins who manage the BA Agents MCP deployment, access, and t
 - Add admin users
 - Add MCP OAuth clients when needed
 - Create and revoke personal access tokens (PATs) for end users
-- Configure the Gemini settings used by public workflow generation
+- Configure the Gemini settings used by workflow generation in MCP and `/workflows`
 
 ## Required environment variables
 
@@ -115,7 +115,7 @@ Authorization: Bearer bss_pat_xxx
 
 - Only `owner` users can manage the Gemini API key and model in `/admin`
 - The key is stored encrypted at rest and is never shown again after save
-- Public workflow generation at `/workflows` stays unavailable until a valid key is configured
+- Workflow generation through MCP and `/workflows` stays unavailable until a valid key is configured
 - `ADMIN_SECRETS_ENCRYPTION_KEY` is only the server-side master key used to encrypt provider secrets stored from `/admin`
 - `ADMIN_SECRETS_ENCRYPTION_KEY` must be set before the admin can save provider keys
 
@@ -129,7 +129,7 @@ For normal users, send them:
 
 ## Workflow diagram generation
 
-BA Agents also supports AI-assisted workflow diagram generation at `/workflows`.
+BA Agents also supports AI-assisted workflow diagram generation through the MCP tool `generate_workflow_artifact` and at `/workflows`.
 
 Use this when the team needs a BPMN-style process artifact instead of only text output, for example:
 
@@ -152,7 +152,21 @@ Recommended input quality:
 - Choose the right scope: Lock, Quote / Quick, Solution, or Cross-suite
 - Include exception paths or approval thresholds when relevant
 
-Workflow generation depends on the configured provider key in `/admin`. If provider configuration is missing or inactive, `/workflows` will remain unavailable.
+Recommended MCP input schema:
+
+```json
+{
+  "prompt": "Generate a workflow and Jira pack for a Quote approval flow where sales drafts the quote, a manager approves large discounts, and the buyer receives follow-up tasks.",
+  "context_scope": "quote",
+  "include_bpmn_xml": false
+}
+```
+
+- `prompt`: Required. Use one workflow request with enough detail for the trigger, actors, decision points, and end states.
+- `context_scope`: Required. One of `lock`, `quote`, `solution`, or `cross_suite`.
+- `include_bpmn_xml`: Optional. Use only when the MCP client needs the raw BPMN XML returned in the tool payload.
+
+Workflow generation depends on the configured provider key in `/admin`. If provider configuration is missing or inactive, `generate_workflow_artifact` and `/workflows` will remain unavailable.
 
 ## Deployment checklist
 
@@ -160,7 +174,7 @@ Workflow generation depends on the configured provider key in `/admin`. If provi
 2. Run Supabase SQL migrations
 3. Redeploy Vercel
 4. Login to `/admin`
-5. Configure the Gemini workflow settings in `/admin` if you want `/workflows` generation enabled
+5. Configure the Gemini workflow settings in `/admin` if you want `generate_workflow_artifact` and `/workflows` generation enabled
 6. Create PATs for users
 7. Test MCP with one real token
 

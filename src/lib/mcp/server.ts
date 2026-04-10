@@ -1,6 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 
+import { getOpenAiKeyMetadata } from "@/lib/ai/openai-provider";
 import { getAppMeta } from "@/lib/app-meta";
 import {
   getAllDocuments,
@@ -13,7 +14,19 @@ import {
   searchDocuments,
   suggestContextBundle,
 } from "@/lib/content/server";
+import { isDatabaseConfigured } from "@/lib/db";
+import { getPublicEnv } from "@/lib/env";
 import { generateReferenceUi } from "@/lib/v0/reference-ui";
+import {
+  generateWorkflowArtifact,
+  getWorkflowErrorCode,
+} from "@/lib/workflows/service";
+import {
+  WORKFLOW_PROMPT_LIMIT,
+  workflowContextScopeSchema,
+  workflowGraphSchema,
+  workflowJiraPackSchema,
+} from "@/lib/workflows/types";
 import {
   APPS,
   CONFIDENCE_LEVELS,
@@ -96,6 +109,36 @@ const referenceUiShape = {
   error: z.string().nullable(),
 };
 
+const workflowContextSnapshotEntryShape = {
+  uri: z.string(),
+  title: z.string(),
+  summary: z.string(),
+  excerpt: z.string(),
+};
+
+const workflowArtifactShape = {
+  id: z.string(),
+  slug: z.string(),
+  title: z.string(),
+  summary: z.string(),
+  context_scope: workflowContextScopeSchema,
+  created_at: z.string(),
+  updated_at: z.string(),
+  model_name: z.string(),
+  latency_ms: z.number(),
+  artifact_url: z.string(),
+  api_url: z.string(),
+  bpmn_download_url: z.string(),
+};
+
+const workflowArtifactResultShape = {
+  artifact: z.object(workflowArtifactShape),
+  flow: workflowGraphSchema,
+  jira_pack: workflowJiraPackSchema,
+  context_snapshot: z.array(z.object(workflowContextSnapshotEntryShape)),
+  bpmn_xml: z.string().nullable(),
+};
+
 function createToolText(title: string, payload: unknown) {
   return `${title}\n\n${JSON.stringify(payload, null, 2)}`;
 }
@@ -129,6 +172,7 @@ function serializeResource(document: DocumentRecord) {
 
 export function createMcpServer() {
   const meta = getAppMeta();
+  const env = getPublicEnv();
   const server = new McpServer({
     name: meta.name,
     title: meta.title,
@@ -451,6 +495,84 @@ export function createMcpServer() {
         ],
         structuredContent,
       };
+    },
+  );
+
+  server.registerTool(
+    "generate_workflow_artifact",
+    {
+      description: "Generate and persist a workflow artifact with a BPMN-ready graph, Jira pack, and shareable URLs.",
+      inputSchema: {
+        prompt: z.string().trim().min(20).max(WORKFLOW_PROMPT_LIMIT),
+        context_scope: workflowContextScopeSchema,
+        include_bpmn_xml: z.boolean().optional(),
+      },
+      outputSchema: workflowArtifactResultShape,
+    },
+    async ({ prompt, context_scope, include_bpmn_xml }) => {
+      if (!isDatabaseConfigured()) {
+        throw new Error(
+          "Workflow generation is unavailable right now because the database is not configured.",
+        );
+      }
+
+      const keyMetadata = await getOpenAiKeyMetadata();
+      if (keyMetadata.status !== "active") {
+        throw new Error(
+          "Workflow generation is unavailable right now because the AI provider key is not active.",
+        );
+      }
+
+      try {
+        const artifact = await generateWorkflowArtifact({
+          prompt,
+          contextScope: context_scope,
+        });
+
+        const artifactUrl = `${env.baseUrl}/workflows/${artifact.slug}`;
+        const apiUrl = `${env.baseUrl}/api/workflows/${artifact.slug}`;
+        const bpmnDownloadUrl = `${apiUrl}?download=xml`;
+
+        const structuredContent = {
+          artifact: {
+            id: artifact.id,
+            slug: artifact.slug,
+            title: artifact.title,
+            summary: artifact.summary,
+            context_scope: artifact.contextScope,
+            created_at: artifact.createdAt.toISOString(),
+            updated_at: artifact.updatedAt.toISOString(),
+            model_name: artifact.modelName,
+            latency_ms: artifact.latencyMs,
+            artifact_url: artifactUrl,
+            api_url: apiUrl,
+            bpmn_download_url: bpmnDownloadUrl,
+          },
+          flow: artifact.flowGraphJson,
+          jira_pack: artifact.jiraPackJson,
+          context_snapshot: artifact.contextSnapshot,
+          bpmn_xml: include_bpmn_xml ? artifact.bpmnXml : null,
+        };
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: createToolText("Workflow artifact", structuredContent),
+            },
+          ],
+          structuredContent,
+        };
+      } catch (error) {
+        const code = getWorkflowErrorCode(error);
+        if (code === "openai_unavailable") {
+          throw new Error(
+            "Workflow generation is unavailable right now because the AI provider key is not active.",
+          );
+        }
+
+        throw error instanceof Error ? error : new Error("Workflow generation failed.");
+      }
     },
   );
 
