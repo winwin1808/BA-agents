@@ -142,8 +142,8 @@ The workflow generator stores:
 
 - A BPMN diagram
 - A normalized workflow graph
-- Jira-ready Epic, Story, and Task output
 - A shareable artifact page in the workflow gallery
+- Optional raw BPMN XML when the client asks for it
 
 Recommended input quality:
 
@@ -151,20 +151,23 @@ Recommended input quality:
 - Keep one workflow per request
 - Choose the right scope: Lock, Quote / Quick, Solution, or Cross-suite
 - Include exception paths or approval thresholds when relevant
+- For larger tasks, structure the prompt with: Trigger, Actors, Main flow, Decisions, Exceptions, End states
 
 Recommended MCP input schema:
 
 ```json
 {
-  "prompt": "Generate a workflow and Jira pack for a Quote approval flow where sales drafts the quote, a manager approves large discounts, and the buyer receives follow-up tasks.",
+  "prompt": "Trigger: Sales rep drafts a quote. Actors: Sales rep, manager, buyer. Main flow: Draft quote -> review discount -> send quote -> buyer responds. Decisions: Manager approval is required when discount exceeds threshold. Exceptions: Buyer requests revision or quote expires. End states: Quote sent, revised, accepted, or expired.",
   "context_scope": "quote",
   "include_bpmn_xml": false
 }
 ```
 
-- `prompt`: Required. Use one workflow request with enough detail for the trigger, actors, decision points, and end states.
+- `prompt`: Required. Use one workflow request with enough detail for the trigger, actors, decision points, and end states. For larger tasks, prefer the structured sections above instead of one long paragraph.
 - `context_scope`: Required. One of `lock`, `quote`, `solution`, or `cross_suite`.
 - `include_bpmn_xml`: Optional. Use only when the MCP client needs the raw BPMN XML returned in the tool payload.
+
+The saved artifact page is intentionally diagram-first so reviewers can open the URL and focus on the workflow only.
 
 Workflow generation depends on the configured provider key in `/admin`. If provider configuration is missing or inactive, `generate_workflow_artifact` and `/workflows` will remain unavailable.
 

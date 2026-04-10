@@ -1,0 +1,129 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]: Workflow artifact
+        - heading "B2B Quote Approval and Buyer Follow-up Workflow" [level=1] [ref=e7]
+        - paragraph [ref=e8]: Quy trình phê duyệt báo giá cho phép nhân viên kinh doanh soạn thảo, hệ thống tự động kiểm tra ngưỡng chiết khấu để yêu cầu quản lý phê duyệt trước khi gửi cho khách hàng thực hiện các bước tiếp theo.
+        - generic [ref=e9]:
+          - generic [ref=e10]: Quote / Quick
+          - generic [ref=e11]: Generated 4/10/2026, 2:11:01 PM
+          - generic [ref=e12]: Model gemini-3-flash-preview
+          - generic [ref=e13]: 34263 ms
+      - generic [ref=e14]:
+        - link "Back to gallery" [ref=e15] [cursor=pointer]:
+          - /url: /workflows
+        - link "Download BPMN XML" [ref=e16] [cursor=pointer]:
+          - /url: /api/workflows/b2b-quote-approval-and-buyer-follow-up-workflow-2f456c?download=xml
+    - generic [ref=e17]:
+      - generic [ref=e19]:
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - img [ref=e24]:
+              - generic [ref=e26]:
+                - generic [ref=e31]:
+                  - generic:
+                    - generic: Quote Initiation
+                - generic [ref=e34]:
+                  - generic:
+                    - generic: Draft Quote
+                - generic [ref=e40]:
+                  - generic:
+                    - generic: High Discount?
+                - generic [ref=e43]:
+                  - generic:
+                    - generic: Manager Approval
+                - generic [ref=e46]:
+                  - generic:
+                    - generic: Send to Buyer
+                - generic [ref=e49]:
+                  - generic:
+                    - generic: Buyer Action
+                - generic [ref=e55]:
+                  - generic:
+                    - generic: Quote Finalized
+                - generic [ref=e58]:
+                  - generic:
+                    - generic: Yes (>15%)
+                - generic [ref=e64]:
+                  - generic:
+                    - generic: "No"
+                - generic [ref=e67]:
+                  - generic:
+                    - generic: Approved
+            - list [ref=e69]:
+              - listitem [ref=e70]:
+                - generic [ref=e71]: B2B Quote Approval and Buyer Follow-up Workflow
+          - link "Powered by bpmn.io" [ref=e72] [cursor=pointer]:
+            - /url: http://bpmn.io
+            - img [ref=e73]
+        - paragraph [ref=e76]: Drag to pan. Use the mouse wheel or trackpad to zoom.
+      - generic [ref=e77]:
+        - generic [ref=e78]:
+          - heading "Prompt" [level=2] [ref=e79]
+          - paragraph [ref=e80]: Generate a workflow and Jira pack for a Quote approval flow where sales drafts the quote, a manager approves large discounts, and the buyer receives follow-up tasks.
+        - generic [ref=e81]:
+          - heading "Epic" [level=2] [ref=e82]
+          - paragraph [ref=e83]: "New: Advanced Quote Approval Workflow"
+          - paragraph [ref=e84]: Xây dựng hệ thống phê duyệt báo giá nội bộ và quy trình theo dõi hành động của người mua để tối ưu hóa tỷ lệ chốt đơn B2B.
+        - generic [ref=e85]:
+          - heading "Stories and Tasks" [level=2] [ref=e86]
+          - generic [ref=e87]:
+            - generic [ref=e88]:
+              - paragraph [ref=e89]: "New: Sales Representative Quote Drafting"
+              - paragraph [ref=e90]: Là nhân viên kinh doanh, tôi muốn soạn thảo báo giá trực tiếp từ backend để chủ động đề xuất giá cho khách hàng VIP.
+              - list [ref=e91]:
+                - listitem [ref=e92]: AC1. Giao diện soạn thảo báo giá cho phép chọn sản phẩm và nhập giá tùy chỉnh.
+                - listitem [ref=e93]: AC2. Trạng thái báo giá ban đầu phải là 'Draft'.
+                - listitem [ref=e94]: AC3. Hệ thống lưu lịch sử người tạo báo giá.
+              - generic [ref=e95]:
+                - generic [ref=e96]:
+                  - paragraph [ref=e97]: "Tech: Extend Quote Schema for Internal Drafting"
+                  - paragraph [ref=e98]: Cập nhật cơ sở dữ liệu để lưu trữ thông tin báo giá do admin/sales tạo thủ công.
+                - generic [ref=e99]:
+                  - paragraph [ref=e100]: "New: Admin UI for Manual Quote Creation"
+                  - paragraph [ref=e101]: Phát triển màn hình tạo báo giá mới trong trang quản trị app.
+            - generic [ref=e102]:
+              - paragraph [ref=e103]: "New: Discount Threshold Approval Logic"
+              - paragraph [ref=e104]: Là quản lý, tôi muốn phê duyệt các báo giá có mức chiết khấu cao để đảm bảo biên lợi nhuận.
+              - list [ref=e105]:
+                - listitem [ref=e106]: AC1. Tự động chuyển trạng thái sang 'Pending Approval' nếu chiết khấu > 15%.
+                - listitem [ref=e107]: AC2. Gửi thông báo email cho quản lý khi có báo giá cần duyệt.
+                - listitem [ref=e108]: AC3. Quản lý có quyền Approve hoặc Reject kèm lý do.
+              - generic [ref=e109]:
+                - generic [ref=e110]:
+                  - paragraph [ref=e111]: "Tech: Implement Approval Workflow Engine"
+                  - paragraph [ref=e112]: Xây dựng logic kiểm tra điều kiện chiết khấu và điều phối trạng thái phê duyệt.
+                - generic [ref=e113]:
+                  - paragraph [ref=e114]: "New: Email Template for Manager Notifications"
+                  - paragraph [ref=e115]: Thiết kế và tích hợp mẫu email thông báo cho quản lý khi có yêu cầu phê duyệt.
+            - generic [ref=e116]:
+              - paragraph [ref=e117]: "New: Buyer Notification and Action Tracking"
+              - paragraph [ref=e118]: Là khách hàng, tôi muốn nhận được thông báo khi có báo giá mới và có thể thực hiện thanh toán hoặc phản hồi ngay lập tức.
+              - list [ref=e119]:
+                - listitem [ref=e120]: AC1. Gửi email chứa link báo giá cho khách hàng sau khi được duyệt.
+                - listitem [ref=e121]: AC2. Khách hàng có thể nhấn 'Accept' để chuyển thành Draft Order.
+                - listitem [ref=e122]: AC3. Hệ thống ghi nhận thời gian khách hàng xem báo giá.
+              - generic [ref=e123]:
+                - generic [ref=e124]:
+                  - paragraph [ref=e125]: "New: Buyer Quote Landing Page Enhancements"
+                  - paragraph [ref=e126]: Cập nhật trang chi tiết báo giá phía frontend để người mua thực hiện các hành động Accept/Reject.
+                - generic [ref=e127]:
+                  - paragraph [ref=e128]: "Test: End-to-End Quote Approval Flow"
+                  - paragraph [ref=e129]: Kiểm thử toàn diện từ lúc sales tạo báo giá đến khi người mua nhận được và thanh toán.
+        - generic [ref=e130]:
+          - heading "Context snapshot" [level=2] [ref=e131]
+          - generic [ref=e132]:
+            - generic [ref=e133]:
+              - paragraph [ref=e134]: BSS B2B Quote App Context
+              - paragraph [ref=e135]: bss://app/quote/context
+              - paragraph [ref=e136]: "Purpose: Dedicated context for BSS B2B Request a Quote, Quick so PM skills stay anchored in RFQ, quote operations, quick order, and buyer ordering flows."
+            - generic [ref=e137]:
+              - paragraph [ref=e138]: PRD Delivery Guidelines
+              - paragraph [ref=e139]: bss://template/prd
+              - paragraph [ref=e140]: Use this reference when the ask is about PRDs, RQMs, feature specs, PRD reviews, Jira breakdowns, user stories, sprint candidates, or backlog prioritization.
+            - generic [ref=e141]:
+              - paragraph [ref=e142]: BSS B2B Request a Quote, Quick
+              - paragraph [ref=e143]: bss://changelog/changelog-bss-b2b-request-a-quote-quick
+              - paragraph [ref=e144]: Customer-facing changelog for the public update page. The source material for this app did not include version numbers, so the entries below are organized by release date. Three latest updates were provided without a con
+  - alert [ref=e145]

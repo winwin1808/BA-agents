@@ -34,7 +34,7 @@ const tools = [
   },
   {
     name: "generate_workflow_artifact",
-    useCase: "Generate and persist a workflow artifact with a BPMN-ready graph, Jira pack, and shareable URLs.",
+    useCase: "Generate and persist a workflow diagram artifact with a BPMN-ready graph and shareable URLs.",
     example: "Generate a workflow artifact for a Quote approval flow with manager approval.",
   },
   {
@@ -220,10 +220,10 @@ Authorization = "Bearer bss_pat_your_token_here"`}
           <div className="rounded-2xl border border-neutral-200 bg-white/80 p-4">
             <p className="font-semibold">Example 6: Generate a workflow diagram</p>
             <p className="mt-2 text-sm leading-7 text-neutral-700">
-              Ask your AI: <code>Use generate_workflow_artifact with context_scope=&quot;quote&quot; and a prompt for a Quote approval flow where sales drafts the quote, a manager approves large discounts, and the buyer receives follow-up tasks.</code>
+              Ask your AI: <code>Use generate_workflow_artifact with context_scope=&quot;quote&quot; and a prompt that lists Trigger, Actors, Main flow, Decisions, Exceptions, and End states for one Quote approval workflow.</code>
             </p>
             <p className="mt-2 text-sm leading-7 text-neutral-700">
-              The MCP client can use <code>generate_workflow_artifact</code> and return the saved artifact URL, workflow graph, and Jira-ready output.
+              The MCP client can use <code>generate_workflow_artifact</code> and return the saved artifact URL plus the normalized workflow graph.
             </p>
           </div>
         </div>
@@ -253,7 +253,8 @@ Authorization = "Bearer bss_pat_your_token_here"`}
           MCP tool <code>generate_workflow_artifact</code> and the web page
           <code> /workflows</code>. Use this when you want to map a business
           process, approval flow, or operational sequence as a BPMN diagram
-          instead of a text-only spec.
+          instead of a text-only spec. The saved artifact page is intentionally
+          diagram-first.
         </p>
         <div className="mt-5 grid gap-4 md:grid-cols-2">
           <div className="rounded-2xl border border-neutral-200 bg-white/80 p-4">
@@ -261,8 +262,8 @@ Authorization = "Bearer bss_pat_your_token_here"`}
             <ul className="mt-3 space-y-2 text-sm leading-7 text-neutral-700">
               <li>A constrained BPMN workflow diagram.</li>
               <li>A normalized workflow graph.</li>
-              <li>Jira-ready Epic, Story, and Task output.</li>
               <li>A saved artifact page that can be reopened and shared internally.</li>
+              <li>Optional raw BPMN XML when requested by the client.</li>
             </ul>
           </div>
           <div className="rounded-2xl border border-neutral-200 bg-white/80 p-4">
@@ -271,14 +272,14 @@ Authorization = "Bearer bss_pat_your_token_here"`}
               <li>Quote approval flows with thresholds and handoff points.</li>
               <li>Registration, review, and approval processes in Solution.</li>
               <li>Lock access-control or onboarding flows with decision gates.</li>
-              <li>Cross-team operational processes that need both diagram and implementation tasks.</li>
+              <li>Cross-team operational processes that need one shareable diagram.</li>
             </ul>
           </div>
         </div>
         <div className="mt-5 rounded-2xl border border-neutral-200 bg-white/80 p-4">
           <p className="font-semibold">Recommended MCP input schema</p>
           <ul className="mt-3 space-y-2 text-sm leading-7 text-neutral-700">
-            <li><code>prompt</code> is required and should describe the trigger, actors, decision points, and end states in one workflow.</li>
+            <li><code>prompt</code> is required and should describe the trigger, actors, main flow, decision points, exception paths, and end states in one workflow.</li>
             <li><code>context_scope</code> is required and must be one of <code>lock</code>, <code>quote</code>, <code>solution</code>, or <code>cross_suite</code>.</li>
             <li><code>include_bpmn_xml</code> is optional. Set it only when your MCP client needs the raw BPMN XML in the tool response.</li>
           </ul>
@@ -286,15 +287,19 @@ Authorization = "Bearer bss_pat_your_token_here"`}
         <div className="mt-5 rounded-2xl border border-neutral-200 bg-white/80 p-4">
           <p className="font-semibold">Prompting tips</p>
           <ul className="mt-3 space-y-2 text-sm leading-7 text-neutral-700">
-            <li>Describe the trigger, main actors, decision points, and end states.</li>
+            <li>Use a compact structure such as Trigger, Actors, Main flow, Decisions, Exceptions, End states.</li>
             <li>Choose the closest context scope: Lock, Quote / Quick, Solution, or Cross-suite.</li>
             <li>Include approval rules, exception paths, or follow-up actions if they matter.</li>
             <li>Keep one workflow per request so the BPMN stays readable.</li>
+            <li>For larger tasks, keep the diagram focused on the primary end-to-end flow and leave minor detail inside task labels.</li>
           </ul>
           <p className="mt-4 text-sm leading-7 text-neutral-700">
-            Example prompt: <code>Generate a workflow and Jira pack for a Quote
-            approval flow where sales drafts the quote, a manager approves large
-            discounts, and the buyer receives follow-up tasks.</code>
+            Example prompt: <code>Trigger: Sales rep drafts a quote. Actors:
+            Sales rep, manager, buyer. Main flow: Draft quote -&gt; review
+            discount -&gt; send quote -&gt; buyer responds. Decisions: Manager
+            approval is required when discount exceeds threshold. Exceptions:
+            Buyer requests revision or quote expires. End states: Quote sent,
+            revised, accepted, or expired.</code>
           </p>
         </div>
       </section>

@@ -8,7 +8,6 @@ import {
 
 const validPayload = `{
   "title": "Quote approval workflow",
-  "summary": "Generate a simple quote approval path.",
   "flow": {
     "nodes": [
       { "id": "start", "kind": "start_event", "label": "Start" },
@@ -20,29 +19,6 @@ const validPayload = `{
       { "id": "f1", "source": "start", "target": "draft" },
       { "id": "f2", "source": "draft", "target": "approve" },
       { "id": "f3", "source": "approve", "target": "end", "label": "Yes" }
-    ]
-  },
-  "jiraPack": {
-    "epic": {
-      "titleEn": "New: Generate workflow artifact for quote approval",
-      "descriptionVi": "Sinh workflow artifact cho luong phe duyet bao gia."
-    },
-    "stories": [
-      {
-        "id": "story_1",
-        "titleEn": "New: Create workflow generation API",
-        "descriptionVi": "Tao API sinh workflow.",
-        "acceptanceCriteriaVi": ["API tra ve workflow hop le."]
-      }
-    ],
-    "tasks": [
-      {
-        "id": "task_1",
-        "titleEn": "Tech: Build BPMN XML serializer",
-        "descriptionVi": "Xay dung serializer cho BPMN XML.",
-        "storyId": "story_1",
-        "dependsOn": []
-      }
     ]
   }
 }`;
@@ -57,7 +33,6 @@ test("parseWorkflowAiOutputText extracts JSON from fenced output", () => {
 test("sanitizeWorkflowJsonCandidate removes trailing commas and smart quotes", () => {
   const sanitized = sanitizeWorkflowJsonCandidate(`{
     “title”: “Quote approval workflow”,
-    “summary”: “Generate a simple quote approval path.”,
     “flow”: {
       “nodes”: [
         { “id”: “start”, “kind”: “start_event”, “label”: “Start” },
@@ -70,34 +45,11 @@ test("sanitizeWorkflowJsonCandidate removes trailing commas and smart quotes", (
         { “id”: “f2”, “source”: “draft”, “target”: “approve” },
         { “id”: “f3”, “source”: “approve”, “target”: “end”, “label”: “Yes” },
       ],
-    },
-    “jiraPack”: {
-      “epic”: {
-        “titleEn”: “New: Generate workflow artifact for quote approval”,
-        “descriptionVi”: “Sinh workflow artifact cho luong phe duyet bao gia.”
-      },
-      “stories”: [
-        {
-          “id”: “story_1”,
-          “titleEn”: “New: Create workflow generation API”,
-          “descriptionVi”: “Tao API sinh workflow.”,
-          “acceptanceCriteriaVi”: [“API tra ve workflow hop le.”],
-        },
-      ],
-      “tasks”: [
-        {
-          “id”: “task_1”,
-          “titleEn”: “Tech: Build BPMN XML serializer”,
-          “descriptionVi”: “Xay dung serializer cho BPMN XML.”,
-          “storyId”: “story_1”,
-          “dependsOn”: [],
-        },
-      ],
-    },
+    }
   }`);
 
   const parsed = parseWorkflowAiOutputText(sanitized);
-  assert.equal(parsed.jiraPack.tasks[0].storyId, "story_1");
+  assert.equal(parsed.flow.edges[2]?.label, "Yes");
 });
 
 test("parseWorkflowAiOutputText throws for non-json output", () => {

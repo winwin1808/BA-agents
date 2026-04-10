@@ -42,7 +42,7 @@ export default async function WorkflowsPage() {
               Latest generated workflow artifacts
             </h2>
             <p className="mt-3 text-sm leading-7 text-neutral-600">
-              Each artifact stores the normalized workflow graph, Jira pack, and BPMN XML that powers the viewer page.
+              Each artifact stores the normalized workflow graph and BPMN XML that power the diagram viewer page.
             </p>
           </div>
           <p className="text-sm text-neutral-500">{artifacts.length} item(s)</p>

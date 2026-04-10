@@ -3,21 +3,9 @@ import {
   type WorkflowAiOutput,
   type WorkflowEdge,
   type WorkflowGraph,
-  type WorkflowJiraPack,
   type WorkflowNode,
   type WorkflowNodeKind,
 } from "@/lib/workflows/types";
-
-const TITLE_PREFIXES = [
-  "New:",
-  "Improve:",
-  "Bug:",
-  "Tech:",
-  "Doc:",
-  "Research:",
-  "Discuss:",
-  "Test:",
-];
 
 function slugToken(value: string, fallback: string) {
   const normalized = value
@@ -43,10 +31,6 @@ function ensureUniqueId(id: string, seen: Set<string>) {
 
 function normalizeNodeKind(kind: WorkflowNodeKind) {
   return kind;
-}
-
-function hasAllowedPrefix(title: string) {
-  return TITLE_PREFIXES.some((prefix) => title.startsWith(prefix));
 }
 
 function traverseDirected(graph: WorkflowGraph, startId: string) {
@@ -167,52 +151,12 @@ export function validateGraph(graph: WorkflowGraph) {
   }
 }
 
-export function validateJiraPack(jiraPack: WorkflowJiraPack) {
-  if (!hasAllowedPrefix(jiraPack.epic.titleEn)) {
-    throw new Error("Epic title must start with a supported Jira prefix.");
-  }
-
-  const storyIds = new Set<string>();
-
-  for (const story of jiraPack.stories) {
-    if (!hasAllowedPrefix(story.titleEn)) {
-      throw new Error("Story title must start with a supported Jira prefix.");
-    }
-
-    if (storyIds.has(story.id)) {
-      throw new Error("Story IDs must be unique.");
-    }
-
-    storyIds.add(story.id);
-  }
-
-  const taskIds = new Set<string>();
-  for (const task of jiraPack.tasks) {
-    if (!hasAllowedPrefix(task.titleEn)) {
-      throw new Error("Task title must start with a supported Jira prefix.");
-    }
-
-    if (!storyIds.has(task.storyId)) {
-      throw new Error("Each task must reference an existing story.");
-    }
-
-    if (taskIds.has(task.id)) {
-      throw new Error("Task IDs must be unique.");
-    }
-
-    taskIds.add(task.id);
-  }
-}
-
 export function normalizeAiWorkflowOutput(raw: unknown): WorkflowAiOutput {
   const parsed = workflowAiOutputSchema.parse(raw);
   const flow = normalizeGraph(parsed.flow);
-  validateJiraPack(parsed.jiraPack);
 
   return {
     title: parsed.title.trim(),
-    summary: parsed.summary.trim(),
     flow,
-    jiraPack: parsed.jiraPack,
   };
 }

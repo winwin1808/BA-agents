@@ -63,11 +63,11 @@ export function WorkflowGenerateForm(props: { generationAvailable: boolean }) {
         <div>
           <div className="eyebrow">AI workflow</div>
           <h2 className="mt-4 text-3xl font-semibold tracking-tight">
-            Generate a task pack with BPMN diagram
+            Generate a BPMN workflow diagram
           </h2>
           <p className="mt-3 max-w-3xl text-sm leading-7 text-neutral-600">
-            Describe the planning problem, feature, or process you want to map. The server
-            will generate a constrained BPMN diagram plus Jira-ready Epic, Story, and Task output.
+            Describe one workflow to map. The generated artifact page is intentionally
+            diagram-first so reviewers can open the link and focus on the flow only.
           </p>
         </div>
         <div className="rounded-2xl border border-neutral-200 bg-white/80 px-4 py-3 text-sm text-neutral-600">
@@ -101,9 +101,13 @@ export function WorkflowGenerateForm(props: { generationAvailable: boolean }) {
             disabled={isPending || !props.generationAvailable}
             maxLength={WORKFLOW_PROMPT_LIMIT}
             onChange={(event) => setPrompt(event.target.value)}
-            placeholder="Example: Generate a workflow and Jira pack for a Quote approval flow where sales drafts the quote, a manager approves large discounts, and the buyer receives follow-up tasks."
+            placeholder={`Trigger:\nActors:\nMain flow:\nDecisions:\nExceptions:\nEnd states:\n\nExample:\nTrigger: Buyer submits RFQ from Quick Order.\nActors: Buyer, Sales rep, Approver.\nMain flow: Create draft quote -> validate pricing -> send quote -> buyer responds.\nDecisions: If discount exceeds threshold, manager approves before sending.\nExceptions: Buyer requests revision or quote expires.\nEnd states: Quote accepted and converted, or quote rejected/expired.`}
             value={prompt}
           />
+          <span className="text-xs leading-6 text-neutral-500">
+            For larger tasks, keep one primary workflow and structure the brief with
+            Trigger, Actors, Main flow, Decisions, Exceptions, and End states.
+          </span>
           <span className="text-xs text-neutral-500">
             {prompt.length}/{WORKFLOW_PROMPT_LIMIT}
           </span>

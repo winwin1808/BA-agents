@@ -1,0 +1,62 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]: Workflow diagram
+        - heading "B2B Quote Approval and Buyer Follow-up Workflow" [level=1] [ref=e6]
+        - generic [ref=e7]:
+          - generic [ref=e8]: Quote / Quick
+          - generic [ref=e9]: Generated 4/10/2026, 2:11:01 PM
+      - generic [ref=e10]:
+        - link "Back to gallery" [ref=e11] [cursor=pointer]:
+          - /url: /workflows
+        - link "Download BPMN XML" [ref=e12] [cursor=pointer]:
+          - /url: /api/workflows/b2b-quote-approval-and-buyer-follow-up-workflow-2f456c?download=xml
+    - generic [ref=e17]:
+      - generic [ref=e18]:
+        - img [ref=e19]:
+          - generic [ref=e21]:
+            - generic [ref=e26]:
+              - generic:
+                - generic: Quote Initiation
+            - generic [ref=e29]:
+              - generic:
+                - generic: Draft Quote
+            - generic [ref=e35]:
+              - generic:
+                - generic: High Discount?
+            - generic [ref=e38]:
+              - generic:
+                - generic: Manager Approval
+            - generic [ref=e41]:
+              - generic:
+                - generic: Send to Buyer
+            - generic [ref=e44]:
+              - generic:
+                - generic: Buyer Action
+            - generic [ref=e50]:
+              - generic:
+                - generic: Quote Finalized
+            - generic [ref=e53]:
+              - generic:
+                - generic: Yes (>15%)
+            - generic [ref=e59]:
+              - generic:
+                - generic: "No"
+            - generic [ref=e62]:
+              - generic:
+                - generic: Approved
+        - list [ref=e64]:
+          - listitem [ref=e65]:
+            - generic [ref=e66]: B2B Quote Approval and Buyer Follow-up Workflow
+      - link "Powered by bpmn.io" [ref=e67] [cursor=pointer]:
+        - /url: http://bpmn.io
+        - img [ref=e68]
+  - button "Open Next.js Dev Tools" [ref=e76] [cursor=pointer]:
+    - generic [ref=e79]:
+      - text: Compiling
+      - generic [ref=e80]:
+        - generic [ref=e81]: .
+        - generic [ref=e82]: .
+        - generic [ref=e83]: .
+  - alert [ref=e84]

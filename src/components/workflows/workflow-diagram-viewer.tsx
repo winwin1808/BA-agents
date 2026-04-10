@@ -66,16 +66,10 @@ export function WorkflowDiagramViewer(props: { xml: string }) {
 
   return (
     <div className="rounded-3xl border border-neutral-200 bg-white/80 p-4">
-      <div className="h-[560px] overflow-hidden rounded-2xl border border-neutral-200 bg-white">
+      <div className="h-[75vh] min-h-[560px] overflow-hidden rounded-2xl border border-neutral-200 bg-white">
         <div className="h-full w-full" ref={containerRef} />
       </div>
-      {error ? (
-        <p className="mt-3 text-sm text-rose-700">{error}</p>
-      ) : (
-        <p className="mt-3 text-sm text-neutral-500">
-          Drag to pan. Use the mouse wheel or trackpad to zoom.
-        </p>
-      )}
+      {error ? <p className="mt-3 text-sm text-rose-700">{error}</p> : null}
     </div>
   );
 }

@@ -14,10 +14,21 @@ import { parseWorkflowAiOutputText } from "@/lib/workflows/output";
 import {
   type StoredWorkflowArtifact,
   type WorkflowContextScope,
+  type WorkflowGraph,
   type WorkflowInput,
+  type WorkflowJiraPack,
 } from "@/lib/workflows/types";
 
 const REPAIR_OUTPUT_CHAR_LIMIT = 12000;
+const WORKFLOW_TITLE_LIMIT = 160;
+const JIRA_TITLE_LIMIT = 160;
+
+const scopeLabels: Record<WorkflowContextScope, string> = {
+  lock: "Lock",
+  quote: "Quote / Quick",
+  solution: "Solution",
+  cross_suite: "Cross-suite",
+};
 
 class WorkflowGenerationError extends Error {
   code: string;
@@ -43,6 +54,7 @@ function slugifyTitle(title: string) {
 function buildWorkflowInstructions(scope: WorkflowContextScope, repairReason?: string) {
   return [
     "You generate structured workflow artifacts for a BA/PM knowledge system.",
+    "Your output is used to render one workflow diagram only.",
     "Return one raw JSON object only.",
     "Do not wrap the JSON in markdown fences.",
     "Do not add commentary before or after the JSON.",
@@ -50,9 +62,9 @@ function buildWorkflowInstructions(scope: WorkflowContextScope, repairReason?: s
     "Do not use pools, lanes, subprocesses, message flows, parallel gateways, or data objects.",
     "The workflow graph must have exactly one start_event, at least one end_event, and every node must be reachable from the start event.",
     "Use concise task and gateway labels that will render well in a BPMN diagram.",
-    "Generate a Jira pack that follows the repo guideline: titles in English, descriptions in Vietnamese.",
-    "Every Jira title must start with one of: New:, Improve:, Bug:, Tech:, Doc:, Research:, Discuss:, Test:.",
-    "Keep the output small enough for an internal planning artifact.",
+    "Prefer diagram accuracy over explanation.",
+    "If the input is large, keep one primary end-to-end workflow and collapse low-value detail into the nearest task node.",
+    "Use repo context only for naming consistency. Do not invent extra process branches unless the user brief implies them.",
     `Scope focus: ${scope}.`,
     repairReason
       ? `Repair the previous invalid output. The issue to fix was: ${repairReason}`
@@ -64,7 +76,10 @@ function buildWorkflowInstructions(scope: WorkflowContextScope, repairReason?: s
 
 function buildWorkflowInput(prompt: string, contextPrompt: string) {
   return [
-    "User request:",
+    "Convert the workflow brief below into one BPMN-style business workflow diagram.",
+    "Prioritize a readable, accurate diagram over text detail.",
+    "",
+    "Workflow brief:",
     prompt,
     "",
     "Repo context:",
@@ -72,42 +87,29 @@ function buildWorkflowInput(prompt: string, contextPrompt: string) {
     "",
     "Output requirements:",
     "- title: short artifact title",
-    "- summary: 1 short paragraph summary",
     "- flow.nodes and flow.edges: supported BPMN subset only",
-    "- jiraPack with 1 epic, 1-5 stories, and 1-12 tasks",
-    "- tasks must reference a storyId from jiraPack.stories",
-    "- top-level keys must be exactly: title, summary, flow, jiraPack",
+    "- top-level keys must be exactly: title, flow",
+    "- keep labels short and diagram-friendly",
+    "- represent only major decision or exception branches",
+    "- if the brief contains multiple connected subflows, keep the main end-to-end workflow",
+    "",
+    "Extract these details from the workflow brief when available:",
+    "- trigger",
+    "- actors or owners",
+    "- main flow steps",
+    "- decision rules or thresholds",
+    "- exception or rejection paths",
+    "- end states",
     "",
     "Required JSON shape:",
     `{`,
     `  "title": "string",`,
-    `  "summary": "string",`,
     `  "flow": {`,
     `    "nodes": [`,
     `      { "id": "string", "kind": "start_event|task|exclusive_gateway|end_event", "label": "string" }`,
     `    ],`,
     `    "edges": [`,
     `      { "id": "string", "source": "string", "target": "string", "label": "string|null" }`,
-    `    ]`,
-    `  },`,
-    `  "jiraPack": {`,
-    `    "epic": { "titleEn": "string", "descriptionVi": "string" },`,
-    `    "stories": [`,
-    `      {`,
-    `        "id": "string",`,
-    `        "titleEn": "string",`,
-    `        "descriptionVi": "string",`,
-    `        "acceptanceCriteriaVi": ["string"]`,
-    `      }`,
-    `    ],`,
-    `    "tasks": [`,
-    `      {`,
-    `        "id": "string",`,
-    `        "titleEn": "string",`,
-    `        "descriptionVi": "string",`,
-    `        "storyId": "string",`,
-    `        "dependsOn": ["string"]`,
-    `      }`,
     `    ]`,
     `  }`,
     `}`,
@@ -124,7 +126,7 @@ function buildWorkflowRepairInput(input: {
     "Repair the invalid workflow output below into one valid JSON object.",
     "Return raw JSON only. No markdown fences. No explanation.",
     "",
-    "Original user request:",
+    "Original workflow brief:",
     input.prompt,
     "",
     "Repo context:",
@@ -133,16 +135,80 @@ function buildWorkflowRepairInput(input: {
     "Validation issue to fix:",
     input.repairReason,
     "",
-    "Required top-level keys: title, summary, flow, jiraPack.",
+    "Required top-level keys: title, flow.",
     "flow.nodes must be objects with id, kind, label.",
     "flow.edges must be objects with id, source, target, label.",
-    "jiraPack.epic must be an object with titleEn and descriptionVi.",
-    "jiraPack.stories must be objects with id, titleEn, descriptionVi, acceptanceCriteriaVi.",
-    "jiraPack.tasks must be objects with id, titleEn, descriptionVi, storyId, dependsOn.",
     "",
     "Invalid model output:",
     input.invalidOutput.slice(0, REPAIR_OUTPUT_CHAR_LIMIT),
   ].join("\n");
+}
+
+function truncateText(value: string, limit: number) {
+  const trimmed = value.trim();
+  if (trimmed.length <= limit) {
+    return trimmed;
+  }
+
+  return `${trimmed.slice(0, limit - 1).trimEnd()}…`;
+}
+
+function buildFlowPreview(graph: WorkflowGraph) {
+  const labels = graph.nodes
+    .filter((node) => node.kind !== "start_event" && node.kind !== "end_event")
+    .map((node) => node.label)
+    .slice(0, 5);
+
+  return labels.join(" -> ");
+}
+
+function buildWorkflowSummary(scope: WorkflowContextScope, flow: WorkflowGraph) {
+  const preview = buildFlowPreview(flow);
+  const scopeLabel = scopeLabels[scope];
+
+  return truncateText(
+    preview
+      ? `Auto-generated ${scopeLabel} workflow diagram covering ${preview}.`
+      : `Auto-generated ${scopeLabel} workflow diagram.`,
+    600,
+  );
+}
+
+function buildFallbackJiraPack(title: string, flow: WorkflowGraph): WorkflowJiraPack {
+  const taskCount = flow.nodes.filter((node) => node.kind === "task").length;
+  const decisionCount = flow.nodes.filter((node) => node.kind === "exclusive_gateway").length;
+
+  return {
+    epic: {
+      titleEn: truncateText(`Doc: Review workflow diagram for ${title}`, JIRA_TITLE_LIMIT),
+      descriptionVi:
+        "Ra soat workflow diagram da sinh de xac nhan trigger, buoc chinh, decision point va end state khop voi yeu cau nghiep vu.",
+    },
+    stories: [
+      {
+        id: "story_review_workflow",
+        titleEn: "Doc: Validate generated workflow logic",
+        descriptionVi: `Doi chieu diagram voi workflow brief de xac nhan ${taskCount} buoc tac vu${
+          decisionCount > 0 ? ` va ${decisionCount} decision point` : ""
+        } phan anh dung luong chinh.`,
+        acceptanceCriteriaVi: [
+          "Diagram the hien dung trigger va end state chinh.",
+          "Nhan task va gateway ngan gon, de doc tren BPMN.",
+          "Nhanh ngoai le quan trong duoc the hien neu anh huong ket qua.",
+        ],
+      },
+    ],
+    tasks: [
+      {
+        id: "task_verify_workflow_diagram",
+        titleEn: "Test: Verify workflow diagram against input",
+        descriptionVi:
+          "Kiem tra diagram voi workflow brief va context scope truoc khi dung artifact nay cho review BA/PM tiep theo.",
+        storyId: "story_review_workflow",
+        dependsOn: [],
+      },
+    ],
+  };
 }
 
 function parseNormalizedWorkflowOutput(rawOutput: string) {
@@ -187,7 +253,7 @@ async function requestWorkflowText(input: {
     model: input.modelName,
     instructions: input.instructions,
     input: input.prompt,
-    max_output_tokens: 3000,
+    max_output_tokens: 1800,
     text: {
       verbosity: "low",
     },
@@ -284,13 +350,14 @@ export async function generateWorkflowArtifact(
 
   return createWorkflowArtifact({
     slug: slugifyTitle(generated.normalized.title),
-    title: generated.normalized.title,
-    summary: generated.normalized.summary,
+    title: truncateText(generated.normalized.title, WORKFLOW_TITLE_LIMIT),
+    summary: buildWorkflowSummary(input.contextScope, generated.normalized.flow),
     contextScope: input.contextScope,
     prompt: input.prompt,
     contextSnapshot: generated.contextSnapshot,
     flowGraphJson: generated.normalized.flow,
-    jiraPackJson: generated.normalized.jiraPack,
+    // Keep minimal persisted metadata for compatibility while generation stays diagram-first.
+    jiraPackJson: buildFallbackJiraPack(generated.normalized.title, generated.normalized.flow),
     bpmnXml,
     modelName: generated.modelName,
     latencyMs: Date.now() - startedAt,

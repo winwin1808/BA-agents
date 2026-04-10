@@ -1,0 +1,46 @@
+- generic [active] [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic [ref=e5]:
+          - generic [ref=e6]: AI workflow
+          - heading "Generate a BPMN workflow diagram" [level=2] [ref=e7]
+          - paragraph [ref=e8]: Describe one workflow to map. The generated artifact page is intentionally diagram-first so reviewers can open the link and focus on the flow only.
+        - generic [ref=e9]: Generation is available.
+      - generic [ref=e10]:
+        - generic [ref=e11]:
+          - generic [ref=e12]: Context scope
+          - combobox "Context scope" [ref=e13]:
+            - option "Lock"
+            - option "Quote / Quick"
+            - option "Solution"
+            - option "Cross-suite" [selected]
+        - generic [ref=e14]:
+          - generic [ref=e15]: Prompt
+          - textbox "Prompt For larger tasks, keep one primary workflow and structure the brief with Trigger, Actors, Main flow, Decisions, Exceptions, and End states. 0/6000" [ref=e16]:
+            - /placeholder: "Trigger:\nActors:\nMain flow:\nDecisions:\nExceptions:\nEnd states:\n\nExample:\nTrigger: Buyer submits RFQ from Quick Order.\nActors: Buyer, Sales rep, Approver.\nMain flow: Create draft quote -> validate pricing -> send quote -> buyer responds.\nDecisions: If discount exceeds threshold, manager approves before sending.\nExceptions: Buyer requests revision or quote expires.\nEnd states: Quote accepted and converted, or quote rejected/expired."
+          - generic [ref=e17]: For larger tasks, keep one primary workflow and structure the brief with Trigger, Actors, Main flow, Decisions, Exceptions, and End states.
+          - generic [ref=e18]: 0/6000
+        - button "Generate workflow" [disabled] [ref=e20]
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - generic [ref=e23]:
+          - generic [ref=e24]: Gallery
+          - heading "Latest generated workflow artifacts" [level=2] [ref=e25]
+          - paragraph [ref=e26]: Each artifact stores the normalized workflow graph and BPMN XML that power the diagram viewer page.
+        - paragraph [ref=e27]: 1 item(s)
+      - link "Quote / Quick 4/10/2026, 2:11:01 PM B2B Quote Approval and Buyer Follow-up Workflow Quy trình phê duyệt báo giá cho phép nhân viên kinh doanh soạn thảo, hệ thống tự động kiểm tra ngưỡng chiết khấu để yêu cầu quản lý phê duyệt trước khi gửi cho khách hàng thực hiện các bước tiếp theo." [ref=e29] [cursor=pointer]:
+        - /url: /workflows/b2b-quote-approval-and-buyer-follow-up-workflow-2f456c
+        - generic [ref=e30]:
+          - generic [ref=e31]: Quote / Quick
+          - generic [ref=e32]: 4/10/2026, 2:11:01 PM
+        - heading "B2B Quote Approval and Buyer Follow-up Workflow" [level=3] [ref=e33]
+        - paragraph [ref=e34]: Quy trình phê duyệt báo giá cho phép nhân viên kinh doanh soạn thảo, hệ thống tự động kiểm tra ngưỡng chiết khấu để yêu cầu quản lý phê duyệt trước khi gửi cho khách hàng thực hiện các bước tiếp theo.
+  - button "Open Next.js Dev Tools" [ref=e40] [cursor=pointer]:
+    - generic [ref=e43]:
+      - text: Compiling
+      - generic [ref=e44]:
+        - generic [ref=e45]: .
+        - generic [ref=e46]: .
+        - generic [ref=e47]: .
+  - alert [ref=e48]

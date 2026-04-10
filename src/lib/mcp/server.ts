@@ -25,7 +25,6 @@ import {
   WORKFLOW_PROMPT_LIMIT,
   workflowContextScopeSchema,
   workflowGraphSchema,
-  workflowJiraPackSchema,
 } from "@/lib/workflows/types";
 import {
   APPS,
@@ -109,13 +108,6 @@ const referenceUiShape = {
   error: z.string().nullable(),
 };
 
-const workflowContextSnapshotEntryShape = {
-  uri: z.string(),
-  title: z.string(),
-  summary: z.string(),
-  excerpt: z.string(),
-};
-
 const workflowArtifactShape = {
   id: z.string(),
   slug: z.string(),
@@ -134,8 +126,6 @@ const workflowArtifactShape = {
 const workflowArtifactResultShape = {
   artifact: z.object(workflowArtifactShape),
   flow: workflowGraphSchema,
-  jira_pack: workflowJiraPackSchema,
-  context_snapshot: z.array(z.object(workflowContextSnapshotEntryShape)),
   bpmn_xml: z.string().nullable(),
 };
 
@@ -501,7 +491,7 @@ export function createMcpServer() {
   server.registerTool(
     "generate_workflow_artifact",
     {
-      description: "Generate and persist a workflow artifact with a BPMN-ready graph, Jira pack, and shareable URLs.",
+      description: "Generate and persist a workflow diagram artifact with a BPMN-ready graph and shareable URLs.",
       inputSchema: {
         prompt: z.string().trim().min(20).max(WORKFLOW_PROMPT_LIMIT),
         context_scope: workflowContextScopeSchema,
@@ -549,8 +539,6 @@ export function createMcpServer() {
             bpmn_download_url: bpmnDownloadUrl,
           },
           flow: artifact.flowGraphJson,
-          jira_pack: artifact.jiraPackJson,
-          context_snapshot: artifact.contextSnapshot,
           bpmn_xml: include_bpmn_xml ? artifact.bpmnXml : null,
         };
 

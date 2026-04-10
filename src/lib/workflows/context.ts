@@ -6,7 +6,7 @@ import type {
   WorkflowContextSnapshotEntry,
 } from "@/lib/workflows/types";
 
-const EXCERPT_LIMIT = 1400;
+const EXCERPT_LIMIT = 600;
 
 function excerptContent(content: string) {
   const normalized = content.replace(/\s+/g, " ").trim();
@@ -75,17 +75,17 @@ export function buildWorkflowContextPrompt(
     .map(
       (entry) =>
         [
-          `Document: ${entry.title}`,
-          `URI: ${entry.uri}`,
+          `Document: ${entry.title} (${entry.uri})`,
           `Summary: ${entry.summary}`,
-          `Excerpt: ${entry.excerpt}`,
+          `Key excerpt: ${entry.excerpt}`,
         ].join("\n"),
     )
     .join("\n\n");
 
   return [
     `Context scope: ${scopeLabel}.`,
-    "Use the repo guidance below as the source of truth for wording and task formatting.",
+    "Use repo context only to align feature wording and app terminology.",
+    "Keep the user workflow brief as the main source of truth for task-specific logic.",
     documents,
   ].join("\n\n");
 }

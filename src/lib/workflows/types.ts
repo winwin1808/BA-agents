@@ -13,7 +13,7 @@ export const WORKFLOW_NODE_LIMIT = 30;
 export const WORKFLOW_EDGE_LIMIT = 50;
 export const WORKFLOW_STORY_LIMIT = 5;
 export const WORKFLOW_TASK_LIMIT = 12;
-export const WORKFLOW_PROMPT_LIMIT = 2000;
+export const WORKFLOW_PROMPT_LIMIT = 6000;
 
 export type WorkflowContextScope = (typeof WORKFLOW_CONTEXT_SCOPES)[number];
 export type WorkflowAppScope = AppName | "cross_suite";
@@ -72,9 +72,7 @@ export const workflowJiraPackSchema = z.object({
 
 export const workflowAiOutputSchema = z.object({
   title: z.string().trim().min(1).max(160),
-  summary: z.string().trim().min(1).max(600),
   flow: workflowGraphSchema,
-  jiraPack: workflowJiraPackSchema,
 });
 
 export const workflowInputSchema = z.object({

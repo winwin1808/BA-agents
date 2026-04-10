@@ -7,7 +7,7 @@ description: 'Use when the task needs BA Agents MCP to retrieve trusted BSS B2B 
 
 ## Overview
 
-Use this skill when the answer should come from the BA Agents MCP instead of memory. The MCP is the trusted retrieval layer for BSS B2B Suite BA/PM context and the entry point for low-fidelity reference UI generation.
+Use this skill when the answer should come from the BA Agents MCP instead of memory. The MCP is the trusted retrieval layer for BSS B2B Suite BA/PM context, the entry point for low-fidelity reference UI generation, and the workflow diagram generator.
 
 ## Preconditions
 
@@ -28,6 +28,7 @@ Use this skill when the answer should come from the BA Agents MCP instead of mem
 - `list_documents`: Use when the user wants browsing, filtered inventory, or discovery by metadata.
 - `get_changelog`: Use before asserting shipped behavior, public feature names, or merchant-facing wording.
 - `get_resource_catalog`: Use for health-checks, onboarding, or coverage checks across kinds, apps, and freshness.
+- `generate_workflow_artifact`: Use when the user needs a BPMN-style process artifact, workflow map, approval flow, or operational handoff diagram. Pass `prompt`, `context_scope`, and optionally `include_bpmn_xml`.
 - `generate_reference_ui`: Use only after the UX/UI task is confirmed. Pass the full confirmed task verbatim in `confirmed_task`. Keep expectations low-fidelity and non-production.
 
 ## Default Workflows
@@ -61,6 +62,15 @@ Use this skill when the answer should come from the BA Agents MCP instead of mem
 3. Pass the full confirmed task in `confirmed_task`, not a short summary.
 4. Treat the output as a reference only. Do not present it as production-ready design or implementation-ready frontend code.
 
+### Workflow Diagram
+
+1. Call `generate_workflow_artifact` when the user wants to map a process, approval path, handoff, or operational sequence as a diagram.
+2. Pass one workflow per request so the artifact stays readable.
+3. Use `prompt` to include the trigger, actors, main flow, decision points, exception paths, and end states.
+4. For larger tasks, prefer a structured brief such as `Trigger`, `Actors`, `Main flow`, `Decisions`, `Exceptions`, `End states`.
+5. Use `context_scope` with one of: `lock`, `quote`, `solution`, or `cross_suite`.
+6. Set `include_bpmn_xml` only when the client needs the raw BPMN XML in the tool response.
+
 ## Search Heuristics
 
 - If the first search is broad, narrow it with `app`, `task_type`, or `feature_area`.
@@ -83,5 +93,6 @@ Use the prompts after you already know the correct app and have at least one rel
 
 - Do not claim a feature is shipped or public without checking `get_changelog`.
 - Do not invent canonical file names, app terminology, or feature labels when the MCP can verify them.
+- Keep workflow requests scoped to one process and choose the closest `context_scope`.
 - Keep summaries concise and source-backed.
 - When confidence is low, say what is missing and which document should be opened next.
