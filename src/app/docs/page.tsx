@@ -212,6 +212,15 @@ Authorization = "Bearer bss_pat_your_token_here"`}
               The MCP client can use <code>generate_reference_ui</code> and return a v0 demo URL.
             </p>
           </div>
+          <div className="rounded-2xl border border-neutral-200 bg-white/80 p-4">
+            <p className="font-semibold">Example 6: Generate a workflow diagram</p>
+            <p className="mt-2 text-sm leading-7 text-neutral-700">
+              Ask your AI: <code>Create a BPMN workflow for a Quote approval flow where sales drafts the quote, a manager approves large discounts, and the buyer receives follow-up tasks.</code>
+            </p>
+            <p className="mt-2 text-sm leading-7 text-neutral-700">
+              Use <code>/workflows</code> when you need a saved BPMN diagram plus Jira-ready output instead of only text notes.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -230,6 +239,50 @@ Authorization = "Bearer bss_pat_your_token_here"`}
             </li>
           ))}
         </ul>
+      </section>
+
+      <section className="panel mt-8 p-6">
+        <h2 className="text-2xl font-semibold">Diagram generation</h2>
+        <p className="mt-3 max-w-3xl text-sm leading-7 text-neutral-700">
+          BA Agents also supports AI-assisted workflow diagram generation at
+          <code> /workflows</code>. This is the right tool when you want to map
+          a business process, approval flow, or operational sequence as a BPMN
+          diagram instead of a text-only spec.
+        </p>
+        <div className="mt-5 grid gap-4 md:grid-cols-2">
+          <div className="rounded-2xl border border-neutral-200 bg-white/80 p-4">
+            <p className="font-semibold">What it generates</p>
+            <ul className="mt-3 space-y-2 text-sm leading-7 text-neutral-700">
+              <li>A constrained BPMN workflow diagram.</li>
+              <li>A normalized workflow graph.</li>
+              <li>Jira-ready Epic, Story, and Task output.</li>
+              <li>A saved artifact page that can be reopened and shared internally.</li>
+            </ul>
+          </div>
+          <div className="rounded-2xl border border-neutral-200 bg-white/80 p-4">
+            <p className="font-semibold">Best use cases</p>
+            <ul className="mt-3 space-y-2 text-sm leading-7 text-neutral-700">
+              <li>Quote approval flows with thresholds and handoff points.</li>
+              <li>Registration, review, and approval processes in Solution.</li>
+              <li>Lock access-control or onboarding flows with decision gates.</li>
+              <li>Cross-team operational processes that need both diagram and implementation tasks.</li>
+            </ul>
+          </div>
+        </div>
+        <div className="mt-5 rounded-2xl border border-neutral-200 bg-white/80 p-4">
+          <p className="font-semibold">Prompting tips</p>
+          <ul className="mt-3 space-y-2 text-sm leading-7 text-neutral-700">
+            <li>Describe the trigger, main actors, decision points, and end states.</li>
+            <li>Choose the closest context scope: Lock, Quote / Quick, Solution, or Cross-suite.</li>
+            <li>Include approval rules, exception paths, or follow-up actions if they matter.</li>
+            <li>Keep one workflow per request so the BPMN stays readable.</li>
+          </ul>
+          <p className="mt-4 text-sm leading-7 text-neutral-700">
+            Example prompt: <code>Generate a workflow and Jira pack for a Quote
+            approval flow where sales drafts the quote, a manager approves large
+            discounts, and the buyer receives follow-up tasks.</code>
+          </p>
+        </div>
       </section>
 
       <section className="mt-8 grid gap-4 md:grid-cols-2">
@@ -287,6 +340,41 @@ Authorization = "Bearer bss_pat_your_token_here"`}
           <li>If your MCP client connects but finds nothing useful, add a more specific tool call such as <code>search_context</code> with <code>app</code>, <code>task_type</code>, or <code>feature_area</code>.</li>
           <li>If you do not have a token yet, contact your admin and ask for a personal access token for BA Agents MCP.</li>
         </ul>
+      </section>
+
+      <section className="panel mt-8 p-6">
+        <h2 className="text-2xl font-semibold">v0 preview troubleshooting</h2>
+        <p className="mt-3 max-w-3xl text-sm leading-7 text-neutral-700">
+          The <code>generate_reference_ui</code> tool can return both a v0
+          chat URL and a demo URL. The chat URL is the editable source
+          conversation. The demo URL is the shareable preview deployment.
+        </p>
+        <ul className="mt-4 space-y-3 text-sm leading-7 text-neutral-700">
+          <li>If a demo opens with <code>Runtime Error</code> and a message like <code>Unexpected identifier 'agency'</code>, the problem is usually invalid generated TSX or JavaScript inside the v0 preview.</li>
+          <li>This is usually not a broken link in BA Agents. Link or token issues typically fail with access, auth, or unavailable errors instead.</li>
+          <li>The same demo can appear fine on one machine and fail on another because of cache differences or because the other machine loads the latest preview bundle path directly.</li>
+          <li>When sharing a UI reference, send both the demo URL and the chat URL so reviewers can fall back to the editable source.</li>
+        </ul>
+        <div className="mt-5 grid gap-4 md:grid-cols-2">
+          <div className="rounded-2xl border border-neutral-200 bg-white/80 p-4">
+            <p className="font-semibold">When the demo fails</p>
+            <ul className="mt-3 space-y-2 text-sm leading-7 text-neutral-700">
+              <li>Open the chat URL.</li>
+              <li>Inspect the latest generated version.</li>
+              <li>Regenerate the preview from the same confirmed task.</li>
+              <li>Shorten or simplify labels and mock data if the generated code looks fragile.</li>
+            </ul>
+          </div>
+          <div className="rounded-2xl border border-neutral-200 bg-white/80 p-4">
+            <p className="font-semibold">How to get more stable previews</p>
+            <ul className="mt-3 space-y-2 text-sm leading-7 text-neutral-700">
+              <li>Pass the full confirmed UX/UI task, not only a short feature name.</li>
+              <li>Keep the scope to one page with a small number of sections and states.</li>
+              <li>Prefer short static mock data.</li>
+              <li>Rewrite visible comparison symbols into words, such as <code>over</code> or <code>at least</code>.</li>
+            </ul>
+          </div>
+        </div>
       </section>
     </main>
   );

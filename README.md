@@ -127,6 +127,33 @@ For normal users, send them:
 - A PAT token
 - The public docs URL: `https://ba-agents.vercel.app/docs`
 
+## Workflow diagram generation
+
+BA Agents also supports AI-assisted workflow diagram generation at `/workflows`.
+
+Use this when the team needs a BPMN-style process artifact instead of only text output, for example:
+
+- Quote approval flows
+- Registration and approval processes
+- Lock access-control flows
+- Cross-suite operational handoff flows
+
+The workflow generator stores:
+
+- A BPMN diagram
+- A normalized workflow graph
+- Jira-ready Epic, Story, and Task output
+- A shareable artifact page in the workflow gallery
+
+Recommended input quality:
+
+- Describe the trigger, actors, decision points, and end states
+- Keep one workflow per request
+- Choose the right scope: Lock, Quote / Quick, Solution, or Cross-suite
+- Include exception paths or approval thresholds when relevant
+
+Workflow generation depends on the configured provider key in `/admin`. If provider configuration is missing or inactive, `/workflows` will remain unavailable.
+
 ## Deployment checklist
 
 1. Set env vars in Vercel
@@ -143,8 +170,48 @@ Set `V0_API_KEYS` if you want the MCP server to generate very basic reference UI
 
 - `V0_API_KEYS` can be comma-separated or newline-separated
 - The server rotates keys round-robin per request and will try the next key when one hits auth/quota/rate-limit style failures
-
 - The integration uses the official `v0-sdk`
 - Output is intentionally constrained to low-fidelity single-page UI references
 - Each tool call should include the full confirmed UX/UI task, not only a short feature label
 - The tool returns the v0 chat URL, demo URL, and generated file names
+
+### v0 output types
+
+- `chat URL`: editable conversation in v0 for follow-up refinement
+- `demo URL`: preview deployment for quick review and sharing
+
+Use the `demo URL` for previewing the generated screen. Use the `chat URL` when you need to inspect or regenerate the source in v0.
+
+### Known behavior on other machines
+
+Sometimes a `demo URL` opens but shows a runtime error such as:
+
+```text
+Runtime Error
+Unexpected identifier 'agency'
+```
+
+This usually means the generated preview code from v0 is invalid TSX/JavaScript. It is not usually a broken markdown link in this repo.
+
+Typical interpretation:
+
+- Access or token problems usually show an auth or unavailable page
+- `Unexpected identifier ...` usually means the preview bundle compiled from generated code that contains an invalid bare word or malformed JSX/JS
+- The issue may appear only on another machine because of cache differences, refreshed assets, or a different preview bundle load path
+
+### Recommended troubleshooting
+
+1. Open the `chat URL` instead of only the `demo URL`.
+2. Check whether the latest v0 version contains malformed text in JSX, object literals, or mock data.
+3. Regenerate the preview from the same prompt if the demo runtime fails.
+4. Prefer sharing both URLs together so reviewers can fall back to the editable chat when the demo is broken.
+5. If the generated UI contains comparison symbols or sample prose, rewrite them into short JSX-safe strings before regenerating.
+
+### Prompting guidance for more stable v0 previews
+
+- Pass the full confirmed UX/UI task, not shorthand
+- Keep the scope to one page and a few states
+- Ask for static mock data only
+- Avoid complex copy pasted into code-like structures
+- Avoid raw comparison symbols such as `<`, `>`, `<=`, `>=` in visible copy unless they are rewritten in words
+- Keep labels and sample values short so they are more likely to compile cleanly
