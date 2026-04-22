@@ -38,26 +38,42 @@ Use this skill as the PM agent for writing specs/PRDs for single-app Lock work. 
 
 ## Default Response Contract
 
-For PRDs, RQMs, and implementation-ready specs, use `../references/prd/PRD_DELIVERY_GUIDELINES.md` for the exact section order, review requirements, and output language rules.
+For spec, PRD, flow, UX, or requirement outputs, always use these sections in order:
 
-For shorter analytical answers that are not PRDs, keep the response concise and decision-first.
+1. `Mục đích`
+   - Mô tả ngắn lý do triển khai: pain point hoặc opportunity.
+   - Include `Impact đến user/business`, `User problem`, and `Business impact (ROI / conversion / retention / compliance...)`.
+   - Keep this section short so stakeholders can quickly understand the task intent.
+2. `Mục tiêu`
+   - Summarize high-level scope: feature/flow, screen/module, and out of scope when needed.
+3. `Triển khai`
+   - Cover the main implementation parts: flow, screen, logic, tracking/event if relevant, and edge cases if relevant.
+   - Include `Business rule` as a table with exactly two columns: `Rules` and `Mô tả`.
+4. `Acceptance Criteria (BDD style)`
+   - Write AC in `Given / When / Then` format.
+   - Present AC as a table with exactly two columns: `AC` and `Minh hoạ`.
+5. `Tracking / Analytics`
+   - Optional, but include when the feature has meaningful behavior to measure.
+   - Use this structure: `event_name`, `trigger`, `properties`.
+6. `Design / Reference`
+   - Include `Figma`, `Docs`, and `Related tickets`; write `N/A` if not available.
 
 ## Working Rules
 
-1. For requirement outputs, keep requirement titles in English and requirement body content in Vietnamese.
-2. For non-requirement analysis, answer in the user's preferred language and keep important feature names and technical terms in English.
-3. Lead with the recommended decision before explanation.
-4. Prefer 5-10 focused bullets total unless the user explicitly asks for a full PRD.
-5. Keep Lock positioned as an access/visibility/policy control app, not a quote app or full wholesale suite.
-6. Call out rule conflicts, publish guardrails, theme compatibility, and auditability whenever they materially affect the recommendation.
-7. Before finalizing any PRD, review it through Dev, UX, and Executive lenses and surface conflicts across those lenses.
-8. When requirements are still fuzzy, use 3-5 Socratic questions to tighten the problem statement, solution rationale, scope boundaries, and success metrics before drafting.
+1. Answer in **Vietnamese first**, keep important feature names and technical terms in English.
+2. Lead with the recommended decision before explanation.
+3. Keep each section concise and stakeholder-readable unless the user explicitly asks for a full PRD.
+4. Keep Lock positioned as an **access/visibility/policy control app**, not a quote app or full wholesale suite.
+5. Call out rule conflicts, publish guardrails, theme compatibility, and auditability whenever they materially affect the recommendation.
+6. Before finalizing any PRD, review it through Dev, UX, and Executive lenses and surface conflicts across those lenses when they affect the recommendation.
+7. When requirements are still fuzzy, use 3-5 Socratic questions to tighten the problem statement, solution rationale, scope boundaries, and success metrics before drafting.
 
 ## Quality Checklist
 
 - Relevant `changelog/` entries were checked so naming and scope match merchant-facing releases.
 - The artifact clearly belongs to Lock, not Quote or Solution.
 - Rule targets, conditions, and guardrails are explicit.
+- Business rules use a `Rules` / `Mô tả` table when rules are part of the ask.
+- Acceptance criteria use BDD `Given / When / Then` and the `AC` / `Minh hoạ` table.
 - Merchant-admin usability and buyer-facing state are both covered when relevant.
 - Risks mention theme compatibility, conflicting rules, or no-valid-method scenarios when applicable.
-- PRDs include the required review summary and Jira breakdown.

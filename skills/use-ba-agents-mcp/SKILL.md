@@ -1,13 +1,13 @@
 ---
 name: use-ba-agents-mcp
-description: 'Use when the task needs BA Agents MCP to retrieve trusted BSS B2B Suite context, open canonical documents, check changelog wording, recommend a minimal context bundle, or generate a very basic reference UI from a confirmed UX/UI task. Covers Lock, Quote/Quick, Solution, and cross-suite BA/PM work.'
+description: 'Use when the task needs BA Agents MCP to retrieve trusted BSS B2B Suite context, open canonical documents, check changelog wording, recommend a minimal context bundle, analyze requirement gaps, or generate a very basic reference UI from a confirmed UX/UI task. Covers Lock, Quote/Quick, Solution, and cross-suite BA/PM work.'
 ---
 
 # Use BA Agents MCP
 
 ## Overview
 
-Use this skill when the answer should come from the BA Agents MCP instead of memory. The MCP is the trusted retrieval layer for BSS B2B Suite BA/PM context, the entry point for low-fidelity reference UI generation, and the workflow diagram generator.
+Use this skill when the answer should come from the BA Agents MCP instead of memory. The MCP is the trusted retrieval layer for BSS B2B Suite BA/PM context, the requirement intake layer for gap analysis, the entry point for low-fidelity reference UI generation, and the workflow diagram generator.
 
 ## Preconditions
 
@@ -28,6 +28,7 @@ Use this skill when the answer should come from the BA Agents MCP instead of mem
 - `list_documents`: Use when the user wants browsing, filtered inventory, or discovery by metadata.
 - `get_changelog`: Use before asserting shipped behavior, public feature names, or merchant-facing wording.
 - `get_resource_catalog`: Use for health-checks, onboarding, or coverage checks across kinds, apps, and freshness.
+- `analyze_requirement_gaps`: Use before drafting PRDs, specs, UX flows, workflows, help docs, or acceptance criteria when the ask may be incomplete. Ask only the returned high-priority clarification questions, or proceed with returned assumptions when the user explicitly allows it.
 - `generate_workflow_artifact`: Use when the user needs a BPMN-style process artifact, workflow map, approval flow, or operational handoff diagram. Pass `prompt`, `context_scope`, and optionally `include_bpmn_xml`.
 - `generate_reference_ui`: Use only after the UX/UI task is confirmed. Pass the full confirmed task verbatim in `confirmed_task`. Keep expectations low-fidelity and non-production.
 
@@ -38,9 +39,10 @@ Use this skill when the answer should come from the BA Agents MCP instead of mem
 1. Call `suggest_context_bundle` with `task_type="prd"` and the right `app`.
 2. Call `search_context` for the specific problem, feature, or module.
 3. Call `get_document` for the top app-context or template URIs.
-4. Call `get_changelog` before finalizing naming or shipped behavior.
-5. Draft the artifact from the retrieved sources.
-6. For requirement outputs, keep requirement titles in English and requirement body content in Vietnamese.
+4. Call `analyze_requirement_gaps` with the original request plus any retrieved context.
+5. If `status="needs_clarification"`, ask only the returned questions before drafting unless the user says to proceed with assumptions.
+6. Call `get_changelog` before finalizing naming or shipped behavior.
+7. Draft the artifact from the retrieved sources and confirmed assumptions.
 
 ### Discovery or Synthesis
 
@@ -93,6 +95,7 @@ Use the prompts after you already know the correct app and have at least one rel
 
 - Do not claim a feature is shipped or public without checking `get_changelog`.
 - Do not invent canonical file names, app terminology, or feature labels when the MCP can verify them.
+- Do not draft implementation-ready requirements while `analyze_requirement_gaps` returns `needs_clarification`, unless the user explicitly accepts the assumptions.
 - Keep workflow requests scoped to one process and choose the closest `context_scope`.
 - Keep summaries concise and source-backed.
 - When confidence is low, say what is missing and which document should be opened next.

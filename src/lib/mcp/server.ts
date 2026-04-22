@@ -16,6 +16,7 @@ import {
 } from "@/lib/content/server";
 import { isDatabaseConfigured } from "@/lib/db";
 import { getPublicEnv } from "@/lib/env";
+import { analyzeRequirementGaps } from "@/lib/requirements/clarification";
 import { generateReferenceUi } from "@/lib/v0/reference-ui";
 import {
   generateWorkflowArtifact,
@@ -42,6 +43,17 @@ const sourceOfTruthSchema = z.enum(SOURCE_OF_TRUTH_VALUES);
 const reviewStatusSchema = z.enum(REVIEW_STATUSES);
 const confidenceSchema = z.enum(CONFIDENCE_LEVELS);
 const freshnessStatusSchema = z.enum(FRESHNESS_STATUSES);
+const clarificationAppSchema = z.enum(["lock", "quote", "solution", "cross_suite"]);
+const clarificationTaskTypeSchema = z.enum([
+  "prd",
+  "ux",
+  "workflow",
+  "help_doc",
+  "release",
+  "discovery",
+  "planning",
+]);
+const clarificationModeSchema = z.enum(["minimal", "balanced", "strict_ready"]);
 
 const metadataShape = {
   task_type: z.array(z.string()),
@@ -127,6 +139,28 @@ const workflowArtifactResultShape = {
   artifact: z.object(workflowArtifactShape),
   flow: workflowGraphSchema,
   bpmn_xml: z.string().nullable(),
+};
+
+const clarificationQuestionShape = {
+  id: z.string(),
+  priority: z.enum(["critical", "high", "medium", "low"]),
+  dimension: z.string(),
+  question: z.string(),
+  why_it_matters: z.string(),
+  suggested_options: z.array(z.string()),
+  default_assumption: z.string(),
+};
+
+const requirementClarificationResultShape = {
+  status: z.enum(["ready", "needs_clarification", "blocked"]),
+  confidence: z.number(),
+  understood_requirement: z.string(),
+  detected_app: clarificationAppSchema,
+  detected_task_type: clarificationTaskTypeSchema,
+  missing_dimensions: z.array(z.string()),
+  questions: z.array(z.object(clarificationQuestionShape)),
+  assumptions_if_unanswered: z.array(z.string()),
+  ready_summary: z.string().optional(),
 };
 
 function createToolText(title: string, payload: unknown) {
@@ -481,6 +515,46 @@ export function createMcpServer() {
           {
             type: "text",
             text: createToolText("Resource catalog", structuredContent),
+          },
+        ],
+        structuredContent,
+      };
+    },
+  );
+
+  server.registerTool(
+    "analyze_requirement_gaps",
+    {
+      description:
+        "Analyze whether a BA/PM requirement request is complete enough to draft a PRD, spec, UX flow, workflow, help doc, or acceptance criteria. Returns smart clarification questions and safe assumptions.",
+      inputSchema: {
+        raw_request: z.string().trim().min(1).describe("The user's original requirement request."),
+        app: clarificationAppSchema.optional(),
+        task_type: clarificationTaskTypeSchema.optional(),
+        target_output: z.string().min(2).optional(),
+        conversation_context: z.string().optional(),
+        retrieved_context: z
+          .array(
+            z.object({
+              uri: z.string().optional(),
+              title: z.string().optional(),
+              summary: z.string().optional(),
+            }),
+          )
+          .optional(),
+        clarification_mode: clarificationModeSchema.optional(),
+        proceed_with_assumptions: z.boolean().optional(),
+      },
+      outputSchema: requirementClarificationResultShape,
+    },
+    async (input) => {
+      const structuredContent = analyzeRequirementGaps(input);
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: createToolText("Requirement gap analysis", structuredContent),
           },
         ],
         structuredContent,
