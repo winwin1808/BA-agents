@@ -21,11 +21,6 @@ Use this skill as the PM agent for writing specs/PRDs for single-app Solution wo
 - `../references/prd/PRD_DELIVERY_GUIDELINES.md` when the ask is a PRD, RQM, feature spec, PRD review, Jira breakdown, user story, or sprint prioritization.
 - `../references/prd/SOCRATIC_QUESTIONING_FRAMEWORK.md` when the PRD still has weak rationale, weak evidence, fuzzy scope, or unclear success criteria.
 
-## Before Writing Spec or RQM
-
-1. Skim the merchant-facing changelog for Solution: `../changelog/changelog-bss-b2b-wholesale-solution.md`, plus any recent `../changelog/changelog-package-*.md` if the work ties to a dated release package.
-2. Reuse consistent feature names, scope, and merchant-visible behavior already described there so the RQM/spec does not drift from shipped or announced wording.
-
 ## Routing Rules
 
 1. If the request is mainly about competitors, market, positioning, win/loss, or counter-play, route to `b2b-competitive-positioning`.
@@ -70,7 +65,6 @@ For spec, PRD, flow, UX, or requirement outputs, always use these sections in or
 
 ## Quality Checklist
 
-- Relevant `changelog/` entries were checked so naming and scope match merchant-facing releases.
 - The artifact clearly belongs to Solution, not Lock or Quote.
 - Shared entities like tags, segments, pricing rules, or payment terms are explicit.
 - Business rules use a `Rules` / `Mô tả` table when rules are part of the ask.

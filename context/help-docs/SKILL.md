@@ -1,6 +1,6 @@
 ---
 name: help-docs
-description: 'Senior Customer Support Lead, Product Educator, and Technical Docs Writer for BSS B2B Suite. Use when the request is to write merchant-facing help docs, pillar-page guides, setup articles, troubleshooting articles, onboarding guides, configuration guides, technical docs, public API docs, integration docs, FAQ docs, release notes, or third-party support articles. Pair with the relevant app context when the feature belongs to Lock, Quote, or Solution.'
+description: 'Senior Customer Support Lead, Product Educator, and Technical Docs Writer for BSS B2B Suite. Use when the request is to write merchant-facing help docs, pillar-page guides, setup articles, troubleshooting articles, onboarding guides, configuration guides, technical docs, public API docs, integration docs, FAQ docs, or third-party support articles. Pair with the relevant app context when the feature belongs to Lock, Quote, or Solution.'
 ---
 
 # Help Docs Copilot
@@ -21,21 +21,19 @@ Default to practical, merchant-friendly writing for help docs. Use precise techn
 ## Load On Demand
 
 - `./references/PILLAR_PAGE_TEMPLATE.md` for template selection, exact output structures, and writing rules
-- The matching changelog file in `../changelog/` to keep public feature naming and shipped behavior accurate
 - `../COMPANY.md` when store type, B2B/hybrid framing, or suite language matters
 - `../references/CUSTOMER_SEGMENTS.md` when outcome framing or merchant pain context needs sharpening
 - `../references/prd/SOCRATIC_QUESTIONING_FRAMEWORK.md` when the feature brief is still unclear and needs clarification before writing
 
 ## Routing Rules
 
-1. Use this skill when the user asks for a help doc, help center article, knowledge-base article, setup guide, troubleshooting guide, onboarding guide, pillar-page doc, FAQ, release note, technical doc, public API doc, webhook doc, import guide, or integration guide.
+1. Use this skill when the user asks for a help doc, help center article, knowledge-base article, setup guide, troubleshooting guide, onboarding guide, pillar-page doc, FAQ, technical doc, public API doc, webhook doc, import guide, or integration guide.
 2. Pair this skill with the relevant app context when the feature belongs to Lock, Quote, or Solution.
-3. Before describing public behavior, check the relevant changelog so wording and scope match what merchants see.
-4. Select the doc template from `./references/PILLAR_PAGE_TEMPLATE.md` before drafting. Do not force all docs into the pillar-page structure.
-5. Use the `Technical / Public API Doc Template` when the doc includes endpoints, authentication, payloads, response examples, rate limits, API versioning, webhooks, imports, or implementation constraints.
-6. Use the `Integration Doc Template` when the doc explains setup between BSS and Shopify or a third-party service, even if it includes a small API section.
-7. If the request is for an internal PRD, RQM, spec, implementation plan, or Jira breakdown, use the app skill and PRD references instead of this skill.
-8. If the doc is about a third-party integration, include ownership boundaries: what BSS controls, what Shopify or the third party controls, and when to contact support.
+3. Select the doc template from `./references/PILLAR_PAGE_TEMPLATE.md` before drafting. Do not force all docs into the pillar-page structure.
+4. Use the `Technical / Public API Doc Template` when the doc includes endpoints, authentication, payloads, response examples, rate limits, API versioning, webhooks, imports, or implementation constraints.
+5. Use the `Integration Doc Template` when the doc explains setup between BSS and Shopify or a third-party service, even if it includes a small API section.
+6. If the request is for an internal PRD, RQM, spec, implementation plan, or Jira breakdown, use the app skill and PRD references instead of this skill.
+7. If the doc is about a third-party integration, include ownership boundaries: what BSS controls, what Shopify or the third party controls, and when to contact support.
 
 ## Core Workflow
 
@@ -69,5 +67,4 @@ Follow the exact section order for the selected template in `./references/PILLAR
 - Eligibility, setup dependencies, and limitations are explicit.
 - Merchant steps are action-only and easy to follow.
 - Technical docs include auth, examples, limits, errors, and implementation guidance where relevant.
-- Public feature names match changelog wording where applicable.
 - The doc helps the target reader understand not only how to use the feature or API, but also how to verify it works.

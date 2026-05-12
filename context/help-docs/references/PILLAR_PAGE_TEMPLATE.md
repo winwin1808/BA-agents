@@ -2,7 +2,7 @@
 
 Use this reference to choose the right documentation template for BSS B2B apps.
 
-The default is the `Pillar-Page Help Doc Template`, but not every doc should use that structure. Technical docs, public API docs, troubleshooting docs, integration guides, FAQ docs, and release notes need different section orders.
+The default is the `Pillar-Page Help Doc Template`, but not every doc should use that structure. Technical docs, public API docs, troubleshooting docs, integration guides, and FAQ docs need different section orders.
 
 ## Role
 
@@ -44,8 +44,6 @@ Choose one primary template before writing:
 | Document public APIs, imports, webhooks, payloads, or developer usage | `Technical / Public API Doc Template` | Use for product public API docs and implementation references |
 | Explain Shopify or third-party integration setup | `Integration Doc Template` | Use when responsibility boundaries matter |
 | Answer common merchant questions | `FAQ Template` | Use for short support articles or repeated objections |
-| Announce shipped changes to merchants | `Release Note / Changelog Doc Template` | Use when the doc explains what changed and who is affected |
-
 If a doc combines multiple intents, choose the primary template and add only the supporting sections needed. Do not merge every template into one long article.
 
 ## Input Checklist
@@ -466,27 +464,3 @@ Follow this exact order:
 - Include `support-sbc@bsscommerce.com` only when escalation is likely
 
 ---
-
-# Release Note / Changelog Doc Template
-
-Use this template when writing merchant-facing documentation for shipped changes.
-
-## Required Output Structure
-
-Follow this exact order:
-
-1. `Title (What changed)`
-2. `Summary`
-3. `Who is affected`
-4. `What changed`
-5. `What merchants need to do`
-6. `Availability & limitations`
-7. `Support`
-
-## Section Guidance
-
-- Keep the summary short and factual
-- Use the exact public feature names from the changelog
-- Make required merchant action explicit
-- Explain whether existing settings continue to work
-- Include `support-sbc@bsscommerce.com` when merchants may need help
