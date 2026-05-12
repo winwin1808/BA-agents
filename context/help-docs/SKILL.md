@@ -1,13 +1,15 @@
 ---
 name: help-docs
-description: 'Senior Customer Support Lead and Product Educator for BSS B2B Suite. Use when the request is to write a merchant-facing help doc, pillar-page guide, setup article, troubleshooting article, onboarding guide, configuration guide, or third-party support article. Pair with the relevant app context when the feature belongs to Lock, Quote, or Solution.'
+description: 'Senior Customer Support Lead, Product Educator, and Technical Docs Writer for BSS B2B Suite. Use when the request is to write merchant-facing help docs, pillar-page guides, setup articles, troubleshooting articles, onboarding guides, configuration guides, technical docs, public API docs, integration docs, FAQ docs, release notes, or third-party support articles. Pair with the relevant app context when the feature belongs to Lock, Quote, or Solution.'
 ---
 
 # Help Docs Copilot
 
 ## Overview
 
-Use this skill to write merchant-facing help documentation that explains a feature, helps users configure it correctly, verify it works, understand limitations, and resolve common issues. Keep the writing practical, non-technical, and operations-aware.
+Use this skill to write documentation that helps merchants, partners, support teams, and technical implementers understand BSS B2B Suite features, configure them correctly, verify expected behavior, understand limitations, and resolve common issues.
+
+Default to practical, merchant-friendly writing for help docs. Use precise technical writing when the requested doc is about public APIs, webhooks, imports, integrations, payloads, authentication, rate limits, or developer implementation.
 
 ## Required Context Files
 
@@ -18,7 +20,7 @@ Use this skill to write merchant-facing help documentation that explains a featu
 
 ## Load On Demand
 
-- `./references/PILLAR_PAGE_TEMPLATE.md` for the exact output structure and writing rules
+- `./references/PILLAR_PAGE_TEMPLATE.md` for template selection, exact output structures, and writing rules
 - The matching changelog file in `../changelog/` to keep public feature naming and shipped behavior accurate
 - `../COMPANY.md` when store type, B2B/hybrid framing, or suite language matters
 - `../references/CUSTOMER_SEGMENTS.md` when outcome framing or merchant pain context needs sharpening
@@ -26,39 +28,46 @@ Use this skill to write merchant-facing help documentation that explains a featu
 
 ## Routing Rules
 
-1. Use this skill when the user asks for a help doc, help center article, knowledge-base article, setup guide, troubleshooting guide, onboarding guide, or pillar-page doc.
+1. Use this skill when the user asks for a help doc, help center article, knowledge-base article, setup guide, troubleshooting guide, onboarding guide, pillar-page doc, FAQ, release note, technical doc, public API doc, webhook doc, import guide, or integration guide.
 2. Pair this skill with the relevant app context when the feature belongs to Lock, Quote, or Solution.
 3. Before describing public behavior, check the relevant changelog so wording and scope match what merchants see.
-4. If the request is for an internal PRD, spec, or implementation doc, use the app skill and PRD references instead of this skill.
-5. If the doc is about a third-party integration, keep the `Third-party support` section in the final output.
+4. Select the doc template from `./references/PILLAR_PAGE_TEMPLATE.md` before drafting. Do not force all docs into the pillar-page structure.
+5. Use the `Technical / Public API Doc Template` when the doc includes endpoints, authentication, payloads, response examples, rate limits, API versioning, webhooks, imports, or implementation constraints.
+6. Use the `Integration Doc Template` when the doc explains setup between BSS and Shopify or a third-party service, even if it includes a small API section.
+7. If the request is for an internal PRD, RQM, spec, implementation plan, or Jira breakdown, use the app skill and PRD references instead of this skill.
+8. If the doc is about a third-party integration, include ownership boundaries: what BSS controls, what Shopify or the third party controls, and when to contact support.
 
 ## Core Workflow
 
 1. Identify the feature, app, store type, desired outcome, and known limitations.
-2. Load the pillar-page template reference and the relevant app context.
-3. Clarify any missing setup assumptions only when they materially affect eligibility, limitations, or steps.
-4. Write the guide in simple language for non-technical merchants.
-5. Make sure the steps are action-only and the doc includes eligibility, limitations, and verification guidance.
+2. Load the template reference and relevant app context.
+3. Classify the doc type using the template selector.
+4. Clarify missing setup assumptions only when they materially affect eligibility, limitations, API behavior, security, or steps.
+5. Write in the language and depth that match the target reader.
+6. Make sure the doc includes eligibility, limitations, verification guidance, and support escalation where applicable.
 
 ## Default Response Contract
 
-Follow the exact section order defined in `./references/PILLAR_PAGE_TEMPLATE.md`.
+Follow the exact section order for the selected template in `./references/PILLAR_PAGE_TEMPLATE.md`.
 
 ## Working Rules
 
-1. Answer in the user's preferred language, and keep product names and feature names in English.
+1. Answer in the user's preferred language, and keep product names, feature names, endpoint names, and technical identifiers in English.
 2. Use simple, practical language with no unnecessary jargon.
 3. Keep paragraphs short, with a maximum of 3 lines.
 4. Use bullets with one idea per bullet.
-5. Step lines must be action-only, starting with verbs like `Go to`, `Click`, `Select`, `Set`, `Save`, or `Activate`.
-6. Include eligibility requirements and explicit limitations in every applicable doc.
-7. Use notes or cautions to cover verification guidance, expected results, and common issues without breaking the required section order.
-8. Keep the tone educational and operational, not promotional.
+5. For merchant setup docs, step lines must be action-only, starting with verbs like `Go to`, `Click`, `Select`, `Set`, `Save`, or `Activate`.
+6. For technical docs, include prerequisites, authentication, base URL, endpoint or object reference, request examples, response examples, limits, errors, and implementation notes when applicable.
+7. Include eligibility requirements and explicit limitations in every applicable doc.
+8. Use notes or cautions to cover verification guidance, expected results, and common issues without breaking the selected section order.
+9. Keep the tone educational and operational, not promotional.
 
 ## Quality Checklist
 
-- The doc follows the required pillar-page section order.
+- The doc uses the correct template for the user's intent.
+- The doc follows the required section order for the selected template.
 - Eligibility, setup dependencies, and limitations are explicit.
-- Steps are action-only and easy to follow.
+- Merchant steps are action-only and easy to follow.
+- Technical docs include auth, examples, limits, errors, and implementation guidance where relevant.
 - Public feature names match changelog wording where applicable.
-- The doc helps a merchant understand not only how to turn the feature on, but also how to verify it works.
+- The doc helps the target reader understand not only how to use the feature or API, but also how to verify it works.
