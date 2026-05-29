@@ -4,6 +4,31 @@ Customer-facing changelog for the public update page.
 This version history keeps merchant-visible changes and removes internal ticket IDs and implementation notes.
 The source material includes a few duplicate version labels and overlapping dates. To avoid inventing new version numbers, those entries are preserved with their original labels and dates.
 
+## v9.57.0 — May 25, 2026
+
+### New
+
+- Enhanced the Net Terms settings experience for clearer setup and management.
+- Added a phone field to the Net Terms form.
+- Added market configuration to the Shipping Rate module.
+- Improved compatibility with Shopify B2B company orders.
+
+## v9.55.0 — Apr 27, 2026
+
+### New
+
+- Enhanced the Order Limit experience.
+- Enhanced the Quantity Increments experience.
+- Enhanced the Extra Fee experience.
+
+## v9.54.0 — Apr 13, 2026
+
+### New
+
+- Enhanced the Volume Pricing settings experience.
+- Updated the pricing plan interface.
+- Enhanced Net Terms to support Shopify discount codes at checkout.
+
 ## v9.52.0 — Mar 16, 2026
 
 ### New

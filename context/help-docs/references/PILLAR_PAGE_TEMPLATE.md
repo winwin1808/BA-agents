@@ -1,74 +1,40 @@
 # BSS B2B Docs Template Library
 
-Use this reference to choose the right documentation template for BSS B2B apps.
+Choose one primary template. Do not merge every template into one long article. Use simple language for merchants and precise technical language for developers.
 
-The default is the `Pillar-Page Help Doc Template`, but not every doc should use that structure. Technical docs, public API docs, troubleshooting docs, integration guides, and FAQ docs need different section orders.
+## Global Rules
 
-## Role
-
-You are a Senior Customer Support Lead, Product Educator, and Technical Docs Writer.
-
-## Goal
-
-Write docs that help the target reader understand a feature, configure or implement it correctly, verify it works, understand limitations, and resolve common issues.
-
-## Audience Options
-
-- Non-technical merchants who care about conversion, revenue, and smooth operations
-- Merchant operations teams who configure workflows and validate outcomes
-- Technical implementers who build against public APIs, imports, webhooks, or integrations
-- Support and CS teams who need reliable troubleshooting and escalation guidance
-
-## Writing Rules
-
-- Use simple, practical language
-- Use technical precision when the doc is for developers or integrators
-- Keep paragraphs short, maximum 3 lines
-- Use bullets with one idea per bullet
-- For merchant setup docs, step lines must be action-only
-- Prefer setup step verbs such as `Go to`, `Click`, `Select`, `Set`, `Save`, `Activate`
-- For technical docs, keep endpoint names, field names, code values, and payload keys in English
-- For technical docs, include examples that are copyable and clearly labeled as examples
-- Include eligibility requirements
-- Include limitations
+- Keep paragraphs short and bullets single-idea.
+- Merchant setup steps must be action-only verbs: `Go to`, `Click`, `Select`, `Set`, `Save`, `Activate`.
+- Technical docs keep endpoint, field, enum, and payload keys in English.
+- Include eligibility and limitations when applicable.
+- Support email: `support-sbc@bsscommerce.com`.
 
 ## Template Selector
 
-Choose one primary template before writing:
-
-| User intent | Use template | Notes |
-|---|---|---|
-| Explain a feature end to end | `Pillar-Page Help Doc Template` | Best default for feature education and broad setup guidance |
-| Show how to set up one workflow | `Setup / Configuration Guide Template` | Use when the ask is mostly step-by-step configuration |
-| Diagnose a problem | `Troubleshooting Doc Template` | Use when the ask includes errors, symptoms, missing output, or "not working" cases |
-| Document public APIs, imports, webhooks, payloads, or developer usage | `Technical / Public API Doc Template` | Use for product public API docs and implementation references |
-| Explain Shopify or third-party integration setup | `Integration Doc Template` | Use when responsibility boundaries matter |
-| Answer common merchant questions | `FAQ Template` | Use for short support articles or repeated objections |
-If a doc combines multiple intents, choose the primary template and add only the supporting sections needed. Do not merge every template into one long article.
+| Intent | Template |
+|---|---|
+| Explain a feature end to end | `Pillar-Page Help Doc` |
+| Configure one workflow | `Setup / Configuration Guide` |
+| Diagnose a problem | `Troubleshooting Doc` |
+| Public API, import, webhook, payload, developer usage | `Technical / Public API Doc` |
+| Shopify or third-party integration | `Integration Doc` |
+| Repeated merchant question | `FAQ` |
 
 ## Input Checklist
 
-Collect or infer the minimum context before writing:
-
-- Feature name
-- Relevant app: Lock, Quote, or Solution
-- Store type: B2B-only or hybrid
-- Buyer groups or tags involved
-- Desired merchant outcome
-- Known limitations such as plan, region, checkout type, or setup dependencies
-- Whether the feature includes a third-party integration
-- For technical docs: base URL, authentication method, endpoint list, request fields, response fields, rate limits, examples, error behavior, versioning, and support contact
-- Support email: `support-sbc@bsscommerce.com`
+- Feature name, app, store type, buyer group/tag, merchant outcome
+- Known plan/region/checkout/setup limitations
+- Third-party dependency, if any
+- Technical docs only: base URL, auth, endpoint list, request/response fields, rate limits, examples, errors, versioning
 
 ---
 
-# Pillar-Page Help Doc Template
+# Pillar-Page Help Doc
 
-Use this template when writing a broad merchant-facing help doc that explains a feature end to end.
+Use for broad merchant-facing feature education.
 
-## Required Output Structure
-
-Follow this exact order:
+## Required Structure
 
 1. `Title (Verb + Outcome + Context)`
 2. `Intro`
@@ -78,86 +44,22 @@ Follow this exact order:
 6. `Understanding [feature]`
 7. `Availability & limitations`
 8. `Adding/configuring`
-9. `Third-party support` if writing a third-party integration doc
+9. `Third-party support` only for third-party integrations
 
-## Section Guidance
+## Notes
 
-### 1. Title
-
-- Use the format `Verb + Outcome + Context`
-- Keep it clear and action-oriented
-
-### 2. Intro
-
-- Write 1-2 short paragraphs
-- Explain what the feature helps merchants achieve
-- Include `availability may vary by plan/setup` if relevant
-
-### 3. Callout Block
-
-Use one short block such as:
-
-- Quick recommendation
-- Tip
-- Best practice
-
-### 4. On This Page
-
-- Add a short TOC as bullets
-- Use the exact section names or close equivalents
-
-### 5. Eligibility Requirements
-
-- List the exact conditions required before setup
-- Include plan, store type, checkout type, app dependencies, tags, or permissions where relevant
-
-### 6. Understanding [feature]
-
-Cover these three ideas:
-
-- What it is
-- What merchants can do with it
-- Where it applies
-
-### 7. Availability & Limitations
-
-- Make limitations explicit
-- Use a table if the availability differs by plan, region, checkout type, or setup
-- Be clear about anything unsupported or partially supported
-
-### 8. Adding/Configuring
-
-- Split into `Step 1`, `Step 2`, and more if needed
-- Keep each step action-only
-- Add `Note` or `Caution` blocks where needed
-- Use notes/cautions to explain verification checks, expected outcomes, and common issues while keeping the required section order intact
-
-### 9. Third-party Support
-
-- Only include this section if the feature depends on or connects to a third-party service
-- Explain what the third party controls vs what BSS controls
-- Include the support contact `support-sbc@bsscommerce.com` when merchants may need help
-
-## Output Expectations
-
-The final doc should help a merchant:
-
-- Understand what the feature does
-- Know whether they are eligible to use it
-- Configure it correctly
-- Verify it works
-- Understand known limitations
-- Know where to get help if needed
+- Intro: 1-2 short paragraphs about merchant outcome.
+- Callout: recommendation, tip, or best practice.
+- Understanding: what it is, what merchants can do, where it applies.
+- Adding/configuring: split into steps; use notes/cautions for verification and common issues.
 
 ---
 
-# Setup / Configuration Guide Template
+# Setup / Configuration Guide
 
-Use this template when the doc's main purpose is to help merchants configure one workflow correctly.
+Use when the main goal is setup.
 
-## Required Output Structure
-
-Follow this exact order:
+## Required Structure
 
 1. `Title (Configure + Feature + Outcome)`
 2. `Intro`
@@ -168,58 +70,19 @@ Follow this exact order:
 7. `Availability & limitations`
 8. `Need help?`
 
-## Section Guidance
+## Notes
 
-### 1. Title
-
-- Use a direct setup title, such as `Configure [feature] for [outcome]`
-- Keep it specific to the workflow
-
-### 2. Intro
-
-- Explain what the setup achieves
-- Mention the store type or buyer group if relevant
-
-### 3. Before You Start
-
-- List required plan, permissions, Shopify setup, buyer groups, tags, theme setup, or app dependencies
-- Include any data or file preparation needed before setup
-
-### 4. Setup Steps
-
-- Split into `Step 1`, `Step 2`, and more if needed
-- Keep each step action-only
-- Add short notes only after the action lines
-
-### 5. Verify The Setup
-
-- Explain how to test the setup as a merchant or buyer
-- Include expected results
-- Include at least one negative test when relevant
-
-### 6. Common Setup Mistakes
-
-- List likely causes of incorrect behavior
-- Use simple merchant-facing language
-
-### 7. Availability & Limitations
-
-- Explain unsupported plans, checkout types, Shopify constraints, theme constraints, or app conflicts
-
-### 8. Need Help?
-
-- Include `support-sbc@bsscommerce.com`
-- Tell merchants what screenshots, store URL, buyer account, or rule name to provide
+- `Before you start`: plan, permissions, Shopify setup, buyer groups/tags, theme/app dependencies, data prep.
+- `Verify`: expected result plus one negative test when relevant.
+- `Need help`: ask for store URL, screenshots, buyer account, rule name, or file evidence as relevant.
 
 ---
 
-# Troubleshooting Doc Template
+# Troubleshooting Doc
 
-Use this template when the doc starts from a symptom, error, missing result, or broken behavior.
+Use for symptoms, errors, missing output, or broken behavior.
 
-## Required Output Structure
-
-Follow this exact order:
+## Required Structure
 
 1. `Title (Fix/Troubleshoot + Symptom)`
 2. `What you may see`
@@ -229,50 +92,20 @@ Follow this exact order:
 6. `How to verify the fix`
 7. `When to contact support`
 
-## Section Guidance
+## Notes
 
-### 1. Title
-
-- Use a symptom-based title, such as `Troubleshoot [symptom]`
-
-### 2. What You May See
-
-- List visible symptoms, warning messages, missing UI, incorrect price, or failed sync behavior
-
-### 3. Most Common Causes
-
-- List causes in likely order
-- Keep each cause tied to a merchant-checkable condition
-
-### 4. Quick Checks
-
-- Provide fast checks before detailed fixes
-- Keep checks short and action-oriented
-
-### 5. How To Fix It
-
-- Split fixes by cause
-- Use action-only steps for merchant actions
-
-### 6. How To Verify The Fix
-
-- Explain the expected correct behavior
-- Include storefront/admin/account checks where relevant
-
-### 7. When To Contact Support
-
-- Include `support-sbc@bsscommerce.com`
-- Tell merchants what evidence to send
+- Order causes by likelihood.
+- Keep checks merchant-actionable.
+- Split fixes by cause.
+- Tell support what evidence to send.
 
 ---
 
-# Technical / Public API Doc Template
+# Technical / Public API Doc
 
-Use this template when documenting product public APIs, endpoint references, import APIs, webhooks, payloads, authentication, or developer implementation.
+Use for public APIs, imports, webhooks, payloads, auth, and developer implementation.
 
-## Required Output Structure
-
-Follow this exact order:
+## Required Structure
 
 1. `Title (Product + Public API / Technical Topic)`
 2. `Overview`
@@ -290,135 +123,24 @@ Follow this exact order:
 14. `Implementation checklist`
 15. `Support`
 
-## Section Guidance
+## Notes
 
-### 1. Title
-
-- Use a clear technical title, such as `BSS B2B Solution Public APIs`
-- Include the product name when the API belongs to one app
-
-### 2. Overview
-
-- Explain what the API lets implementers do
-- Mention the main supported use cases
-- State whether the API is intended for production automation, migration, import, sync, or reporting
-
-### 3. Who Should Use This
-
-- Identify the expected reader: developer, integration partner, merchant technical team, or CS/implementation team
-- Avoid writing this section like a marketing intro
-
-### 4. Prerequisites
-
-- List app installation, plan, permission, enabled module, Shopify setup, API credential, or store configuration requirements
-- Include any data preparation requirements
-
-### 5. Base URL And Authentication
-
-- Provide the base URL if known
-- Explain the authentication method
-- Show required headers or token placement when known
-- Do not invent secrets, endpoint hosts, or auth schemes
-
-### 6. API Conventions
-
-Include only the conventions that apply:
-
-- Content type
-- HTTP methods
-- Pagination
-- Idempotency
-- Date and time format
-- Currency format
-- Market, customer, company, product, variant, or rule identifiers
-- Async processing behavior
-
-### 7. Endpoint Reference
-
-Use a table when multiple endpoints exist:
-
-| Method | Endpoint | Purpose | Required scope/module | Notes |
-|---|---|---|---|---|
-| `POST` | `/example` | Example purpose | Example module | Example note |
-
-For each endpoint, include:
-
-- Purpose
-- Required parameters
-- Optional parameters
-- Request body fields
-- Response fields
-- Side effects
-- Known constraints
-
-### 8. Request Examples
-
-- Use fenced code blocks with `http`, `bash`, or `json`
-- Label every example
-- Keep example payloads realistic but not sensitive
-- Add comments outside the code block, not inside JSON
-
-### 9. Response Examples
-
-- Include success and failure examples when known
-- Explain important fields after the example
-- Avoid promising fields that are not confirmed
-
-### 10. Errors And Troubleshooting
-
-Use a table when possible:
-
-| Error / Symptom | Meaning | How to fix |
-|---|---|---|
-| `401 Unauthorized` | Missing or invalid credential | Check the API credential and auth header |
-
-Include validation errors, rate-limit errors, payload-size errors, sync failures, and partial success behavior when applicable.
-
-### 11. Rate Limits And Operational Limits
-
-- State request limits, file-size limits, payload-size limits, processing windows, retry guidance, and batching guidance
-- Include Shopify or third-party limits if they affect implementation
-- If limits are unknown, say they are not confirmed instead of guessing
-
-### 12. Versioning And Compatibility
-
-- State supported API version or app version if known
-- Explain backwards compatibility expectations
-- Mention breaking-change risks or deprecated fields when relevant
-
-### 13. Security And Data Handling
-
-- Explain credential handling
-- Mention PII, customer data, price data, and order data considerations where relevant
-- Tell implementers not to expose credentials in frontend code
-
-### 14. Implementation Checklist
-
-- Provide a short checklist for developers before go-live
-- Include auth, sandbox/test store, payload validation, retry behavior, monitoring, and rollback where relevant
-
-### 15. Support
-
-- Include `support-sbc@bsscommerce.com`
-- Ask for store URL, endpoint, request timestamp, sanitized request body, sanitized response body, and correlation/request ID if available
-
-## Technical Writing Rules
-
-- Do not invent endpoints, fields, auth methods, rate limits, or response codes
-- Mark unknown values as `Not confirmed` or ask for source data
-- Keep examples syntactically valid
-- Use English for endpoint names, field names, enum values, and code examples
-- Use Vietnamese or the user's preferred language for explanations when requested
+- Do not invent endpoints, auth, fields, limits, response codes, or versions.
+- Mark unknown values as `Not confirmed`.
+- Endpoint table: `Method`, `Endpoint`, `Purpose`, `Required scope/module`, `Notes`.
+- Each endpoint should cover purpose, required/optional params, request/response fields, side effects, constraints.
+- Examples use fenced `http`, `bash`, or `json`; keep JSON valid and comments outside code.
+- Error table: `Error / Symptom`, `Meaning`, `How to fix`.
+- Security: mention credential handling and PII/price/order/customer data when relevant.
+- Support: ask for store URL, endpoint, request timestamp, sanitized request/response, request ID if available.
 
 ---
 
-# Integration Doc Template
+# Integration Doc
 
-Use this template when the doc explains setup or behavior across BSS, Shopify, and a third-party system.
+Use for BSS + Shopify or third-party setup.
 
-## Required Output Structure
-
-Follow this exact order:
+## Required Structure
 
 1. `Title (Connect/Use + Systems + Outcome)`
 2. `Overview`
@@ -432,23 +154,20 @@ Follow this exact order:
 10. `Troubleshooting`
 11. `Support`
 
-## Section Guidance
+## Notes
 
-- Explain what data or behavior moves between systems
-- Include a data mapping table when fields are involved
-- Separate what BSS controls from what Shopify or the third party controls
-- Include fallback behavior when sync, checkout, API, or theme behavior fails
-- Include `support-sbc@bsscommerce.com`
+- Explain data/behavior movement across systems.
+- Include mapping table when fields are involved.
+- Separate what BSS controls from Shopify/third party.
+- Include fallback behavior for sync, checkout, API, or theme failures.
 
 ---
 
-# FAQ Template
+# FAQ
 
-Use this template for short support content that answers repeated merchant questions.
+Use for short repeated support questions.
 
-## Required Output Structure
-
-Follow this exact order:
+## Required Structure
 
 1. `Title`
 2. `Short answer`
@@ -456,11 +175,8 @@ Follow this exact order:
 4. `Related setup or limitations`
 5. `Need help?`
 
-## Section Guidance
+## Notes
 
-- Start with the direct answer
-- Keep each question focused on one topic
-- Link or reference the setup guide, pillar page, or technical doc when relevant
-- Include `support-sbc@bsscommerce.com` only when escalation is likely
-
----
+- Start with the direct answer.
+- Keep one topic per FAQ.
+- Link/reference related setup, pillar, or technical doc when relevant.

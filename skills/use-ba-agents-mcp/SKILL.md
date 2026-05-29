@@ -1,97 +1,66 @@
 ---
 name: use-ba-agents-mcp
-description: 'Use when the task needs BA Agents MCP to retrieve trusted BSS B2B Suite context, open canonical documents, recommend a minimal context bundle, analyze requirement gaps, or generate a very basic reference UI from a confirmed UX/UI task. Covers Lock, Quote/Quick, Solution, and cross-suite BA/PM work.'
+description: 'Use BA Agents MCP to retrieve trusted BSS B2B Suite context, open canonical documents, recommend context bundles, analyze requirement gaps, generate workflow artifacts, or create basic reference UI. Covers Lock, Quote/Quick, Solution, and cross-suite BA/PM work.'
 ---
 
 # Use BA Agents MCP
 
-## Overview
+## Purpose
 
-Use this skill when the answer should come from the BA Agents MCP instead of memory. The MCP is the trusted retrieval layer for BSS B2B Suite BA/PM context, the requirement intake layer for gap analysis, the entry point for low-fidelity reference UI generation, and the workflow diagram generator.
+Use BA Agents MCP instead of memory for canonical BA/PM context, templates, gap analysis, workflow artifacts, and low-fidelity reference UI. Pair with `../use-b2b-knowledge-mcp/SKILL.md` when current behavior, setup steps, limitations, API details, or integration behavior must be verified.
 
-## Preconditions
+## Start
 
-- Assume the MCP server is already configured and authenticated in the client.
-- If the BA Agents tools are unavailable, say the MCP is not connected instead of guessing.
-
-## Start Here
-
-1. Identify the app first: `lock`, `quote`, `solution`, or cross-suite.
-2. Identify the task type: `prd`, `discovery`, `competitive`, `help-doc`, `release`, or `planning`.
-3. Prefer MCP retrieval over memory whenever the task depends on canonical docs, templates, or current app context.
+1. Identify app: `lock`, `quote`, `solution`, or `cross_suite`.
+2. Identify task: `prd`, `discovery`, `competitive`, `help_doc`, `release`, or `planning`.
+3. Prefer MCP retrieval over memory for canonical context/templates.
+4. Use B2B Knowledge Wiki MCP for public-facing or implementation-sensitive behavior verification.
 
 ## Tool Routing
 
-- `search_context`: Default starting point for fuzzy asks. Add `app`, `task_type`, and `feature_area` whenever you can.
-- `suggest_context_bundle`: Use before drafting a PRD, discovery synthesis, help doc, release brief, or strategic recommendation. Treat this as the minimum trusted starter set.
-- `get_document`: Use after search or bundle selection when you need the full canonical document, metadata, or related documents.
-- `list_documents`: Use when the user wants browsing, filtered inventory, or discovery by metadata.
-- `get_resource_catalog`: Use for health-checks, onboarding, or coverage checks across kinds, apps, and freshness.
-- `analyze_requirement_gaps`: Use before drafting PRDs, specs, UX flows, workflows, help docs, or acceptance criteria when the ask may be incomplete. Ask only the returned high-priority clarification questions, or proceed with returned assumptions when the user explicitly allows it.
-- `generate_workflow_artifact`: Use when the user needs a BPMN-style process artifact, workflow map, approval flow, or operational handoff diagram. Pass `prompt`, `context_scope`, and optionally `include_bpmn_xml`.
-- `generate_reference_ui`: Use only after the UX/UI task is confirmed. Pass the full confirmed task verbatim in `confirmed_task`. Keep expectations low-fidelity and non-production.
+- `suggest_context_bundle`: starter bundle for PRD, discovery, help doc, release brief, strategy.
+- `search_context`: fuzzy lookup; add `app`, `task_type`, `feature_area` when possible.
+- `get_document`: open full canonical docs after search/bundle or known `bss://` URI.
+- `list_documents`: browse by metadata.
+- `get_resource_catalog`: health/coverage check.
+- `analyze_requirement_gaps`: before drafting PRD/spec/UX/workflow/help doc/AC when request may be incomplete.
+- `generate_workflow_artifact`: BPMN/process/approval/handoff diagrams.
+- `generate_reference_ui`: only after UX/UI task is confirmed; output is reference only.
 
-## Default Workflows
+## Workflows
 
-### PRD or Spec
+PRD/spec:
+1. `suggest_context_bundle(task_type="prd")`
+2. `search_context` for problem/feature/module
+3. `get_document` for top context/template
+4. `analyze_requirement_gaps`
+5. Ask only high-priority questions unless user accepts assumptions
+6. Verify behavior/API/limits/public wording via B2B Knowledge Wiki MCP when material
+7. Draft from retrieved context + assumptions
 
-1. Call `suggest_context_bundle` with `task_type="prd"` and the right `app`.
-2. Call `search_context` for the specific problem, feature, or module.
-3. Call `get_document` for the top app-context or template URIs.
-4. Call `analyze_requirement_gaps` with the original request plus any retrieved context.
-5. If `status="needs_clarification"`, ask only the returned questions before drafting unless the user says to proceed with assumptions.
-6. Draft the artifact from the retrieved sources and confirmed assumptions.
+Discovery:
+1. `suggest_context_bundle(task_type="discovery")`
+2. `search_context`
+3. `get_document`
+4. Separate evidence from inference
 
-### Discovery or Synthesis
+Help doc:
+1. `suggest_context_bundle(task_type="help-doc")`
+2. `get_document` for help template/app context
+3. Verify behavior/setup/limitations/API/integration via B2B Knowledge Wiki MCP
 
-1. Call `suggest_context_bundle` with `task_type="discovery"`.
-2. Use `search_context` for the theme, segment, or problem area.
-3. Open the most relevant docs with `get_document`.
-4. Separate evidence from inference in the output.
+UI reference:
+1. Confirm full UX/UI task
+2. Call `generate_reference_ui` with the confirmed task verbatim
 
-### Help Doc or Merchant-Facing Content
+Workflow diagram:
+1. Use one process per artifact
+2. Include trigger, actors, main flow, decisions, exceptions, end states
+3. Choose `context_scope`: `lock`, `quote`, `solution`, or `cross_suite`
 
-1. Call `suggest_context_bundle` with `task_type="help-doc"`.
-2. Use `get_document` on the help-doc template or app context before writing.
+## Rules
 
-### UX/UI Reference
-
-1. Confirm the UX/UI task with the user first.
-2. Call `generate_reference_ui` only after the task is confirmed.
-3. Pass the full confirmed task in `confirmed_task`, not a short summary.
-4. Treat the output as a reference only. Do not present it as production-ready design or implementation-ready frontend code.
-
-### Workflow Diagram
-
-1. Call `generate_workflow_artifact` when the user wants to map a process, approval path, handoff, or operational sequence as a diagram.
-2. Pass one workflow per request so the artifact stays readable.
-3. Use `prompt` to include the trigger, actors, main flow, decision points, exception paths, and end states.
-4. For larger tasks, prefer a structured brief such as `Trigger`, `Actors`, `Main flow`, `Decisions`, `Exceptions`, `End states`.
-5. Use `context_scope` with one of: `lock`, `quote`, `solution`, or `cross_suite`.
-6. Set `include_bpmn_xml` only when the client needs the raw BPMN XML in the tool response.
-
-## Search Heuristics
-
-- If the first search is broad, narrow it with `app`, `task_type`, or `feature_area`.
-- When the task is ambiguous, prefer app context and templates before narrower supporting references.
-- If the user already has a known `bss://` URI, skip search and use `get_document`.
-- If results still look noisy, use `list_documents` to inspect available metadata combinations.
-
-## Prompt Usage
-
-If the client supports MCP prompts, prefer these after retrieval:
-
-- `draft_prd`
-- `synthesize_discovery`
-- `write_help_doc`
-- `analyze_strategy`
-
-Use the prompts after you already know the correct app and have at least one relevant document or bundle in hand.
-
-## Quality Rules
-
-- Do not invent canonical file names, app terminology, or feature labels when the MCP can verify them.
-- Do not draft implementation-ready requirements while `analyze_requirement_gaps` returns `needs_clarification`, unless the user explicitly accepts the assumptions.
-- Keep workflow requests scoped to one process and choose the closest `context_scope`.
-- Keep summaries concise and source-backed.
-- When confidence is low, say what is missing and which document should be opened next.
+- Do not invent canonical file names, app terminology, or feature labels when MCP can verify them.
+- Do not present behavior/setup/API/limits/integration details as confirmed unless verified through BA Agents context or B2B Knowledge Wiki MCP.
+- Do not draft implementation-ready requirements while `analyze_requirement_gaps` returns `needs_clarification`, unless user accepts assumptions.
+- Keep summaries concise and source-backed; state missing docs when confidence is low.

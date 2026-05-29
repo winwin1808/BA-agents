@@ -19,7 +19,7 @@ All context files live under **`context/`** using a folder-based structure by ap
 | App Quote / Quick | `context/quote/SKILL.md` + `context/quote/references/APP_CONTEXT.md` |
 | App Solution | `context/solution/SKILL.md` + `context/solution/references/APP_CONTEXT.md` |
 | Competitor / positioning by app | `context/lock/references/COMPETITIVE_CONTEXT.md`, `context/quote/references/COMPETITIVE_CONTEXT.md`, `context/solution/references/COMPETITIVE_CONTEXT.md` |
-| Merchant-facing changelog | `context/changelog/*.md` |
+| Current module behavior / public docs source of truth | B2B Knowledge Wiki MCP via `skills/use-b2b-knowledge-mcp/SKILL.md` |
 
 ## Working Approach
 
@@ -32,7 +32,7 @@ All context files live under **`context/`** using a folder-based structure by ap
 7. Load `context/help-docs/SKILL.md` and the relevant app context when the ask is for a help doc, setup guide, troubleshooting article, or merchant-facing support content.
 8. Write specs / RQMs / PRDs using the structure in the relevant `context/<app>/SKILL.md` plus the shared PRD references when applicable.
 9. For requirement outputs, keep **requirement titles in English** and **requirement body content in Vietnamese**.
-10. Before describing shipped behavior or public feature names, check `context/changelog/` to keep wording accurate.
+10. Before describing current product behavior, public setup steps, limitations, API details, or public feature names, check the B2B Knowledge Wiki MCP via `skills/use-b2b-knowledge-mcp/SKILL.md`.
 11. For competitor, positioning, or win-loss questions, load the matching `context/<app>/references/COMPETITIVE_CONTEXT.md`.
 
-For routing details and changelog usage, see **`.cursor/rules/bss-b2b-suite-context.mdc`**.
+For routing details and wiki verification usage, see **`.cursor/rules/bss-b2b-suite-context.mdc`**.

@@ -1,5 +1,5 @@
 ---
-description: BSS B2B BA-agents — map context folder, app routing, changelog usage
+description: BSS B2B BA-agents — map context folder, app routing, wiki verification usage
 alwaysApply: true
 ---
 
@@ -18,7 +18,7 @@ This repo is **PM/BA context only** (markdown under `context/`). Canonical paths
 7. **`context/help-docs/SKILL.md`** + `context/help-docs/references/PILLAR_PAGE_TEMPLATE.md` — only when the ask is for merchant-facing help docs, setup guides, troubleshooting docs, or support content.
 8. **One app bundle** by topic (see table below): `context/<app>/SKILL.md` + `context/<app>/references/APP_CONTEXT.md`.
 9. **`context/<app>/references/COMPETITIVE_CONTEXT.md`** — only for competitors, positioning, win/loss.
-10. **`context/changelog/`** — before stating shipped behavior or public feature names for RQM/specs or help docs; use `changelog-template.md` for structure.
+10. **B2B Knowledge Wiki MCP** — before stating current product behavior, public setup steps, limitations, API details, or public feature names for RQM/specs or help docs. Use `skills/use-b2b-knowledge-mcp/SKILL.md` for the verification workflow.
 
 ## App routing
 
@@ -33,7 +33,7 @@ This repo is **PM/BA context only** (markdown under `context/`). Canonical paths
 
 **Cross-app or portfolio PRD** — still start from `COMPANY.md` + the relevant app contexts; load `context/references/CUSTOMER_SEGMENTS.md` when segmentation materially affects the recommendation, load `context/references/prd/PRD_DELIVERY_GUIDELINES.md` for structure and review method, load `context/references/prd/SOCRATIC_QUESTIONING_FRAMEWORK.md` when the feature rationale is still weak, load `context/product-analysis/SKILL.md` when the decision needs strategic stress-testing, and call out scope boundaries using each app's "vs other apps" section.
 
-**Merchant help docs** — start from the relevant app context, load `context/help-docs/SKILL.md` and `context/help-docs/references/PILLAR_PAGE_TEMPLATE.md`, then check `context/changelog/` before describing public behavior or availability.
+**Merchant help docs** — start from the relevant app context, load `context/help-docs/SKILL.md` and `context/help-docs/references/PILLAR_PAGE_TEMPLATE.md`, then check the B2B Knowledge Wiki MCP before describing current behavior, setup steps, limitations, API details, or availability.
 
 ## Output
 

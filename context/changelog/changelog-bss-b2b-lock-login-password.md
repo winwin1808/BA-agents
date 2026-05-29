@@ -3,6 +3,60 @@
 Customer-facing changelog for the public update page.
 This version history keeps merchant-visible changes and removes internal ticket IDs, merge requests, research items, and demo links.
 
+## v1.19.0 — May 21, 2026
+
+### Improved
+
+- Refreshed the Analytics page layout for a cleaner and more modern Lock analytics experience.
+- Improved usability and navigation across Passcode Management and Analytics pages.
+
+### Fixed
+
+- Optimized Analytics API performance for a faster reporting experience.
+- Added protection to help prevent passcode request spam.
+
+## v1.18.0 — May 8, 2026
+
+### New
+
+- Added a URL Parameter lock condition so merchants can control access based on UTM parameters, affiliate links, or promotional campaigns.
+
+### Improved
+
+- Added passcode modal branding options, including a brand image and customizable call-to-action text.
+- Added preview support for hidden shipping methods so merchants can verify shipping rules before publishing.
+
+## v1.17.0 — Apr 23, 2026
+
+### New
+
+- Added passcode entry on collection pages so buyers can unlock locked product cards directly from the collection view.
+- Added passcode modal support for product cards, including customizable message text and colors.
+
+### Improved
+
+- Added more conditions for hiding payment methods and controlling checkout access, including subtotal amount, customer email, customer phone, customer login status, and always-on rules.
+- Added live preview for Hide Payment Methods and Hide Accelerated Checkout Buttons rules in the app admin.
+- Added product and cart quantity conditions for payment and checkout rules.
+
+## v1.16.0 — Apr 8, 2026
+
+### New
+
+- Added theme-based install settings so merchants can install app code on a selected theme target, including draft themes.
+
+### Improved
+
+- Added custom replacement messages when hiding a section, block, or snippet.
+- Added a custom redirect URL option for Hide Price rules.
+
+## v1.15.0 — Mar 25, 2026
+
+### New
+
+- Added Hide Shipping Method rules so merchants can hide one or more checkout shipping methods based on customer, login, or product conditions.
+- Added Hide Section, Block, and Snippet rules so merchants can hide theme sections, blocks, snippets, or custom CSS selectors.
+
 ## v1.14.0 — Mar 11, 2026
 
 ### New
