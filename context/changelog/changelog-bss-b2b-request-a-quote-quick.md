@@ -1,80 +1,63 @@
-# BSS B2B Request a Quote, Quick
+Guide for Setting Up 'My Quote History' on the New Shopify Customer Account
 
-Customer-facing changelog for the public update page.
-The source material for this app did not include version numbers, so the entries below are organized by release date.
-Three latest updates were provided without a confirmed publish date, so they are grouped in a separate section and should receive a final date before publishing.
+{"isoDate":"2025-12-11","title":"Guide for Setting Up 'My Quote History' on the New Shopify Customer Account","detail":"We have added a complete setup guide to help merchants display the My Quote History page inside Shopify new customer account experience. This guide makes it simple to activate and customize the customer quote management interface.","redirectUrl": "/r4q/settings?tab=2" }
 
-## Date to confirm — Latest updates from source notes
+Live Preview for Translations (Quick Order - Request For Quote)
 
-### New
+{"isoDate":"2025-12-11","title":"Live Preview for Translations (Quick Order - Request For Quote)","detail":"To make customization easier, we have added a Live Preview Translation feature for both: Quick Order and Request For Quote (RFQ). Now, whenever you edit translation text, the interface will instantly update, helping you adjust content faster and more accurately.", "redirectUrl": "/translations"}
 
-- Added Email Sender Configuration so merchants can set up outgoing emails more reliably and improve deliverability.
-- Bulk CSV import on Quick Order pages now supports multiple files, and merchants can remove files before import.
+Build for Shopify Certification – BFS Completed
 
-### Improved
+{"isoDate":"2025-12-11","title":"Build for Shopify Certification - BFS Completed","detail":"We are excited to announce that our app has officially passed the Build for Shopify (BFS) requirements and has been awarded the BFS badge. This milestone confirms our commitment to performance, security, and high-quality merchant experience."}
 
-- Quick Order products can now be manually sorted to match the collection order preferred by each merchant.
+Request for Quote (RFQ) - Display Additional Metafields on Quote Request Form
 
-## Dec 11, 2025
+{"isoDate":"2025-11-28","title":"Request for Quote (RFQ) - Display Additional Metafields on Quote Request Form","detail":"The Quote Request Form now supports displaying additional custom metafields from products. This enhancement allows customers to provide more detailed and accurate information when submitting RFQs, helping store owners process quote requests faster and more efficiently."}
 
-### New
+Request for Quote (RFQ) - Quote Multiple Variants from Collection Page
 
-- Added a step-by-step guide to help merchants show My Quote History inside Shopify's new customer accounts.
-- Added live translation preview for both Quick Order and Request for Quote, so merchants can see text changes instantly.
-- Completed the Build for Shopify requirements and earned the BFS badge.
+{"isoDate":"2025-11-10","title":"Request for Quote (RFQ) - Quote Multiple Variants from Collection Page","detail":"Customers can now select and request quotes for multiple product variants directly from the collection page. This enhancement streamlines bulk inquiries, reduces the steps needed to submit RFQs, and helps store owners capture more high-value quote requests with ease."}
 
-## Nov 28, 2025
+Onboarding App (New)
 
-### New
+{"isoDate":"2025-10-27","title":"Onboarding App","detail":"Added a guided onboarding flow to help users quickly understand how Quick Order and Request for Quote work. The onboarding highlights how these features speed up bulk purchasing, simplify quote requests, and ultimately help increase conversions and sales."}
 
-- Request for Quote forms can now display additional product metafields, helping customers send more complete request details.
+Request for Quote (RFQ) - Editable Shipping Address
 
-## Nov 10, 2025
+{"isoDate":"2025-10-15","title":"Request for Quote (RFQ) - Editable Shipping Address","detail":"Added the ability for customers to edit the shipping address directly within the Request for Quote form. This update ensures more accurate quote submissions, reduces back-and-forth corrections, and helps store owners process RFQs faster and more efficiently."}
 
-### New
+Enhanced Compatibility with B2B/Wholesale Quantity Break Rules
 
-- Customers can now request quotes for multiple variants directly from collection pages.
+{"isoDate":"2025-09-17","title":"Enhanced Compatibility with B2B/Wholesale Quantity Break Rules","detail":"This feature ensures that your Quick Order page works perfectly with your existing B2B/Wholesale pricing structure. When customers add items in bulk, the correct quantity break discounts are automatically applied. No manual adjustments, no confusion - customers instantly see the right price based on the quantity they choose."}
 
-## Oct 27, 2025
+Request for Quote (RFQ) - Export Quotes as PDF
 
-### New
+{"isoDate":"2025-09-10","title":"Request for Quote (RFQ) - Export Quotes as PDF","detail":"Make sharing and managing quotes effortless. With this feature, you can quickly generate professional PDF versions of customer quotes and download them instantly. Perfect for sending to clients, keeping internal records, or accessing quotes offline. No extra setup - just one click to export."}
 
-- Added a guided onboarding flow to help merchants understand Quick Order and Request for Quote faster.
+Quick Order - All-in-One Page Management
 
-## Oct 15, 2025
+{"isoDate":"2025-09-10","title":"Quick Order - All-in-One Page Management","detail":"Simplify the ordering experience by bringing all your ordering pages into one unified location. Customers can easily browse and choose the page that suits their buying needs without navigating through multiple menus. This streamlined approach reduces friction and makes bulk or repeat ordering faster and more convenient.", "link": "https://docs-shpf.bsscommerce.com/bss-b2b-quick-order-and-quotes/quick-order/create-universal-page"}
 
-### New
+Seamless Product Transfer from Quick Order to RFQ
 
-- Customers can now edit the shipping address directly inside the Request for Quote form.
+{"isoDate":"2025-08-21","title":"Seamless Product Transfer from Quick Order to RFQ","detail":"Customers can now add products directly from the Quick Order page into a quote request without switching screens. This streamlined integration makes the process faster and more intuitive, reducing friction and improving the overall purchasing experience."}
 
-## Sep 17, 2025
+Bulk Selection for Single-Click RFQ Submission
 
-### Improved
+{"isoDate":"2025-08-21","title":"Bulk Selection for Single-Click RFQ Submission","detail":"Quick Order now supports bulk transfer into RFQ. Customers can select multiple items in Quick Order and submit them all together in a single RFQ request with just one click. This saves time, especially for large or repeated orders, and ensures accuracy when requesting quotes for many products."}
 
-- Quick Order is now compatible with B2B/Wholesale Quantity Break rules, so bulk discounts stay accurate during ordering.
+Enhanced Compatibility with B2B/Wholesale Quantity Increment Rules
 
-## Sep 10, 2025
+{"isoDate":"2025-08-19","title":"Enhanced Compatibility with B2B/Wholesale Quantity Increment Rules","detail":"Quick Order now fully supports B2B/Wholesale quantity increment rules, ensuring customers can only order in the correct multiples. This prevents invalid quantities and ensures accurate bulk purchasing."}
 
-### New
+Request for Quote - Multiple File Upload Support
 
-- Export quotes as PDF for faster sharing, downloading, and offline record keeping.
-- Added all-in-one page management for Quick Order, so merchants can manage ordering pages from one place.
+{"isoDate":"2025-08-19","title":"Multiple File Upload Support","detail":"Customers can now attach multiple files within a single quote request. This makes it easier to provide product specs, reference images, or supporting documents in one submission."}
 
-## Aug 21, 2025
+Request for Quote - Improved File Validation with Instant Error Feedback
 
-### New
+{"isoDate":"2025-08-19","title":"Improved File Validation with Instant Error Feedback","detail":"The RFQ form now includes real-time validation rules that immediately alert customers if a file type or file size is not allowed - helping them correct issues on the spot."}
 
-- Customers can transfer products from Quick Order to Request for Quote without switching screens.
-- Customers can select multiple items in Quick Order and submit them together in one RFQ with a single click.
+Request for Quote - Increased Maximum File Size to 20MB
 
-## Aug 19, 2025
-
-### New
-
-- Quick Order is now compatible with B2B/Wholesale Quantity Increment rules, so buyers can only order in the correct multiples.
-- Customers can upload multiple files in a single quote request.
-- Increased the maximum upload size to 20 MB.
-
-### Improved
-
-- Added real-time file validation with instant error messages for unsupported file types or file sizes.
+{"isoDate":"2025-08-19","title":"Increased Maximum File Size to 20MB","detail":"To support larger documents, the maximum file upload size has been raised to 20MB. Customers can now upload higher-quality files or multiple large attachments without interruption."}
